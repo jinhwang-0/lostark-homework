@@ -116,18 +116,20 @@ mine.forEach(ch=>{
 }function renderBoard(){const board=$("raidBoard");board.innerHTML="";$("addPartyBtn").disabled=!selectedRaid;if(!selectedRaid){$("selectedRaidText").textContent="레이드를 선택하세요.";return}$("selectedRaidText").textContent=`${selectedRaid.name} · 파티당 ${selectedRaid.party_size}명 · ${Number(selectedRaid.min_level).toLocaleString()}레벨 이상`;let size=Number(selectedRaid.party_size||8);board.className=size<=4?"board two-party":"board";const rps=parties.filter(p=>p.raid_id===selectedRaid.id).sort((a,b)=>Number(partyCleared(a.id))-Number(partyCleared(b.id))||a.party_no-b.party_no);if(!rps.length){board.innerHTML='<div class="empty">생성된 파티가 없습니다. + 파티 추가를 눌러주세요.</div>';return}rps.forEach(pt=>{const done=partyCleared(pt.id);let pd=document.createElement("div");pd.id="party-"+pt.id;pd.className="party "+(done?"done":"");pd.innerHTML=`<h3><span>${pt.party_no}파티 ${done?"✅":""}</span><span class="row"><button class="${done?'secondary':'good'}" onclick="togglePartyClear('${pt.id}', ${!done})">${done?'완료취소':'완료'}</button><button class="danger" onclick="deleteParty('${pt.id}')">삭제</button></span></h3>`;let slots=document.createElement("div");slots.className=`slots size-${size>=16?16:size<=4?4:8}`;for(let slot=1;slot<=size;slot++){let p=placeAt(pt.id,slot),ch=p?charById(p.character_id):null;let sd=document.createElement("div");sd.className="slot "+(ch?`filled ${cardType(ch)}`:"");sd.ondragover=e=>{e.preventDefault();sd.classList.add("dragover")};sd.ondragleave=()=>sd.classList.remove("dragover");sd.ondrop=e=>{e.preventDefault();sd.classList.remove("dragover");dropCharacter(e.dataTransfer.getData("text/plain"),pt.id,slot,p)};sd.onclick=()=>{if(p){removePlacement(p);return}const pick=selectedPlacementCharacter();if(pick){dropCharacter(pick,pt.id,slot,null)}};sd.innerHTML=ch?`<div>${characterHtml(ch,false)}</div>`:`${pt.party_no}-${slot}<br>드래그`;slots.appendChild(sd)}pd.appendChild(slots);board.appendChild(pd)})}async function addParty(){if(!selectedRaid)return;const rps=parties.filter(p=>p.raid_id===selectedRaid.id);const next=rps.length?Math.max(...rps.map(p=>p.party_no))+1:1;const {error}=await sb.from("v6_raid_parties").insert({workspace_id:workspace.id,raid_id:selectedRaid.id,party_no:next});if(error)alert(error.message);await loadAll()}async function deleteParty(id){if(!confirm("이 파티를 삭제할까요?"))return;await sb.from("v6_raid_parties").delete().eq("id",id);await loadAll()}async function togglePartyClear(pid,isClear){let {data:ex}=await sb.from("v6_raid_clears").select("*").eq("party_id",pid).maybeSingle();if(ex)await sb.from("v6_raid_clears").update({is_clear:isClear,updated_at:new Date().toISOString()}).eq("id",ex.id);else await sb.from("v6_raid_clears").insert({workspace_id:workspace.id,raid_id:selectedRaid.id,party_id:pid,is_clear:isClear});await loadAll()}async function dropCharacter(chId,pid,slot,existing){const ch=charById(chId);if(!ch||!selectedRaid)return;if(existing){if(!confirm("기존 배치를 교체할까요?"))return;await sb.from("v6_raid_placements").delete().eq("id",existing.id)}const dup=placements.find(p=>p.party_id===pid&&p.character_id===chId);if(dup)await sb.from("v6_raid_placements").delete().eq("id",dup.id);const {error}=await sb.from("v6_raid_placements").insert({workspace_id:workspace.id,party_id:pid,character_id:chId,slot_no:slot});if(error)alert(error.message);selectedMobileCharacterId=null;selectedCharacterId=null;await loadAll()}async function removePlacement(p){if(!confirm("이 배치를 해제할까요?"))return;await sb.from("v6_raid_placements").delete().eq("id",p.id);await loadAll()}function renderEligible(){
 const box=$("eligibleList");box.innerHTML="";
 if(!selectedRaid){$("eligibleInfo").textContent="레이드를 선택하세요.";return}
-const list=[...characters].sort((a,b)=>{
-  const userCompare=String(a.member?.nickname||"").localeCompare(String(b.member?.nickname||""),'ko');
-  return userCompare ||
-    combatPowerValue(b)-combatPowerValue(a) ||
-    itemLevelValue(b)-itemLevelValue(a) ||
-    String(a.name).localeCompare(String(b.name),'ko');
-});
-$("eligibleInfo").textContent=`${selectedRaid.name} 기준 전체 캐릭터 ${list.length}개`;
-if(!list.length){box.innerHTML='<div class="empty">등록된 캐릭터가 없습니다.</div>';return}
+const list=characters
+  .filter(c=>eligible(c,selectedRaid))
+  .sort((a,b)=>{
+    const userCompare=String(a.member?.nickname||"").localeCompare(String(b.member?.nickname||""),'ko');
+    return userCompare ||
+      combatPowerValue(b)-combatPowerValue(a) ||
+      itemLevelValue(b)-itemLevelValue(a) ||
+      String(a.name).localeCompare(String(b.name),'ko');
+  });
+$("eligibleInfo").textContent=`${selectedRaid.name} 가능 캐릭터 ${list.length}개`;
+if(!list.length){box.innerHTML='<div class="empty">가능 캐릭터가 없습니다.</div>';return}
 list.forEach(ch=>{
-  let placed=placedInSelectedRaid(ch.id),ok=eligible(ch,selectedRaid),assigns=charAssignmentAll(ch),d=document.createElement("div");
-  d.className=`member ${placed?"placed":ok?cardType(ch):"uneligible"} ${assigns.some(a=>a.done)?"clear":""}`;
+  let placed=placedInSelectedRaid(ch.id),assigns=charAssignmentAll(ch),d=document.createElement("div");
+  d.className=`member ${placed?"placed":cardType(ch)} ${assigns.some(a=>a.done)?"clear":""}`;
   d.draggable=!placed;
   d.dataset.charId=ch.id;
   d.ondragstart=e=>{if(!placed)e.dataTransfer.setData("text/plain",ch.id)};
