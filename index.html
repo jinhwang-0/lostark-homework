@@ -488,7 +488,7 @@ if(sourcePlacement){
   if(existing){
     const sourcePartyId=sourcePlacement.party_id;
     const sourceSlot=sourcePlacement.slot_no;
-    const temporarySlot=-Date.now();
+    const temporarySlot=-((crypto.getRandomValues(new Uint32Array(1))[0]%2000000000)+1);
     let result=await sb.from("v6_raid_placements").update({slot_no:temporarySlot}).eq("id",sourcePlacement.id);
     if(!result.error)result=await sb.from("v6_raid_placements").update({party_id:sourcePartyId,slot_no:sourceSlot}).eq("id",existing.id);
     if(!result.error)result=await sb.from("v6_raid_placements").update({party_id:pid,slot_no:slot}).eq("id",sourcePlacement.id);
