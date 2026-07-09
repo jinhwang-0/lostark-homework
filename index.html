@@ -186,7 +186,8 @@ body.dark .raid-card.home-card{
 
 <style>
 /* gem calculator tab */
-.gem-panel{max-width:760px;margin:0 auto}
+.gem-panel{max-width:1500px;margin:0 auto}
+.gem-tools-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(420px,1.1fr);gap:14px;align-items:start}
 .gem-box{background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:14px}
 .gem-input-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 .gem-item label{display:block;font-size:12px;color:var(--muted);font-weight:900;margin-bottom:5px}
@@ -199,6 +200,29 @@ body.dark .raid-card.home-card{
 .gem-calc-btn{width:100%;padding:11px 12px;border-radius:12px}
 .gem-result{margin-top:12px;padding:13px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.18);border-radius:14px;white-space:pre-line;line-height:1.65;font-size:14px;color:var(--text)}
 body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.18)}
+.cube-box{background:var(--panel2);border:1px solid var(--line);border-radius:18px;padding:14px}
+.cube-ticket-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.cube-ticket-item label,.cube-reward-editor label{display:block;font-size:12px;color:var(--muted);font-weight:900;margin-bottom:5px}
+.cube-ticket-item input,.cube-reward-editor input,.cube-target-row input,.cube-target-row select{width:100%}
+.cube-result-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:8px;margin-top:12px;align-items:stretch}
+.cube-result-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;color:var(--text);cursor:pointer}
+.cube-result-card b{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+.cube-result-card strong{display:block;font-size:18px;color:var(--text)}
+.cube-result-card.gem-card{min-height:210px;text-align:center;display:flex;flex-direction:column;justify-content:center}
+.cube-gem-lines{display:grid;gap:5px;margin-top:8px;font-size:20px;font-weight:950;color:var(--text);line-height:1.25}
+.cube-side-results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;height:100%}
+.cube-side-results .cube-result-card{text-align:left;display:flex;flex-direction:column;justify-content:center;min-height:96px}
+.cube-target-row{display:grid;grid-template-columns:150px 1fr auto;gap:8px;align-items:end;margin-top:12px}
+.cube-target-row select{appearance:none;background:var(--panel);border:1px solid var(--line2);border-radius:12px;color:var(--text);font-weight:900;padding:10px 34px 10px 11px;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 10px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+.cube-plan{margin-top:10px;padding:12px;border-radius:14px;border:1px solid rgba(22,163,74,.22);background:rgba(22,163,74,.08);line-height:1.55;font-size:13px}
+.cube-plan-title{font-size:15px;font-weight:950;color:var(--text);margin-bottom:6px}
+.cube-plan-main{font-size:18px;font-weight:950;color:var(--good);margin-bottom:6px}
+.cube-plan-detail{color:var(--muted);font-weight:800}
+.cube-config{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+.cube-config-list{display:grid;gap:8px;max-height:360px;overflow:auto}
+.cube-config-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}
+.cube-config-head{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:8px}
+.cube-reward-editor{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
 .ai-arrange-btn{background:linear-gradient(135deg,#0f766e,#2563eb)}
 .ai-config{display:grid;gap:12px}
 .ai-exception-tools{display:grid;gap:8px}
@@ -214,31 +238,64 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
 .ai-progress-text{font-size:12px;color:var(--muted);font-weight:900;text-align:right;margin-top:4px}
 @media(max-width:760px){
   .gem-panel{max-width:none}
+  .gem-tools-grid{grid-template-columns:1fr}
   .gem-input-grid{grid-template-columns:1fr}
   .gem-targets{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cube-ticket-grid,.cube-result-grid,.cube-side-results,.cube-reward-editor,.cube-target-row{grid-template-columns:1fr}
   .ai-exception-row{grid-template-columns:1fr}
 }
 </style>
 
-</head><body><header><div class="wrap"><div class="top"><div class="title-tabs"><div><h1>로아 레이드 현황판</h1><div class="subtitle">Made by 진황</div></div><div class="tabs"><div class="tab active" data-tab="homework">숙제 관리</div><div class="tab" data-tab="raids">레이드 관리</div><div class="tab" data-tab="members">길드원/캐릭터</div><div class="tab" data-tab="gemcalc">보석 계산기</div></div></div><div class="row"><input id="workspaceCode" placeholder="길드 이름"/><input id="nicknameInput" placeholder="호칭"/><button id="connectBtn">접속</button><button id="themeBtn" class="ghost">다크모드</button></div></div></div></header><main><div class="notice">매주 수요일 오전 6시 이후 첫 접속 시 파티 완료 상태만 자동 초기화</div><section id="homework" class="section active"><div class="layout"><aside class="panel side-sticky"><div class="board-head"><h2>내 원정대</h2><button id="addCharBtn" class="secondary" disabled>캐릭터 추가</button></div><div class="small" id="myInfo">접속 후 표시됩니다.</div><div id="myCharacterList" class="list" style="margin-top:10px"></div></aside><section class="panel"><div class="board-head"><div><h2>레이드 배치판</h2><div id="selectedRaidText" class="small">레이드를 선택하세요.</div></div><div class="row"><button id="aiArrangeBtn" class="ai-arrange-btn" disabled>AI배치요청</button><button id="addPartyBtn" class="good" disabled>+ 파티 추가</button><button id="refreshAllBtn" class="secondary" disabled>갱신</button></div></div><div class="raid-category-box"><div id="raidSelector" class="raid-select-card"></div></div><div class="board-divider"></div><div id="raidBoard" class="board"></div></section><aside class="panel side-sticky"><h2>레이드 가능 길드원</h2><div id="eligibleInfo" class="small">레이드를 선택하면 표시됩니다.</div><div id="eligibleList" class="list" style="margin-top:10px"></div></aside></div></section><section id="raids" class="section"><div class="panel"><div class="board-head"><div><h2>레이드 관리</h2><div class="small">레이드별 최소/최대 레벨(미만)(최대 미만)과 인원수만 설정합니다.</div></div><button id="addRaidBtn" disabled>레이드 추가</button></div><div id="raidManageList"></div></div></section><section id="members" class="section"><div class="panel"><h2>길드원/캐릭터 현황</h2><div id="memberCharacterList" style="margin-top:12px"></div></div></section>
+</head><body><header><div class="wrap"><div class="top"><div class="title-tabs"><div><h1>로아 레이드 현황판</h1><div class="subtitle">Made by 진황</div></div><div class="tabs"><div class="tab active" data-tab="homework">숙제 관리</div><div class="tab" data-tab="raids">레이드 관리</div><div class="tab" data-tab="members">길드원/캐릭터</div><div class="tab" data-tab="gemcalc">보석 계산기</div></div></div><div class="row"><input id="workspaceCode" placeholder="길드 이름"/><input id="nicknameInput" placeholder="호칭"/><button id="connectBtn">접속</button><button id="themeBtn" class="ghost">다크모드</button></div></div></div></header><main><div class="notice">매주 수요일 오전 6시 이후 첫 접속 시 파티 완료 상태만 자동 초기화</div><section id="homework" class="section active"><div class="layout"><aside class="panel side-sticky"><div class="board-head"><h2>내 원정대</h2><button id="addCharBtn" class="secondary" disabled>캐릭터 추가</button></div><div class="small" id="myInfo">접속 후 표시됩니다.</div><div id="myCharacterList" class="list" style="margin-top:10px"></div></aside><section class="panel"><div class="board-head"><div><h2>레이드 배치판</h2><div id="selectedRaidText" class="small">레이드를 선택하세요.</div></div><div class="row"><button id="undoPlacementBtn" class="ghost" disabled>되돌리기</button><button id="aiArrangeBtn" class="ai-arrange-btn" disabled>AI배치요청</button><button id="addPartyBtn" class="good" disabled>+ 파티 추가</button><button id="refreshAllBtn" class="secondary" disabled>갱신</button></div></div><div class="raid-category-box"><div id="raidSelector" class="raid-select-card"></div></div><div class="board-divider"></div><div id="raidBoard" class="board"></div></section><aside class="panel side-sticky"><h2>레이드 가능 길드원</h2><div id="eligibleInfo" class="small">레이드를 선택하면 표시됩니다.</div><div id="eligibleList" class="list" style="margin-top:10px"></div></aside></div></section><section id="raids" class="section"><div class="panel"><div class="board-head"><div><h2>레이드 관리</h2><div class="small">레이드별 최소/최대 레벨(미만)(최대 미만)과 인원수만 설정합니다.</div></div><button id="addRaidBtn" disabled>레이드 추가</button></div><div id="raidManageList"></div></div></section><section id="members" class="section"><div class="panel"><h2>길드원/캐릭터 현황</h2><div id="memberCharacterList" style="margin-top:12px"></div></div></section>
 <section id="gemcalc" class="section">
   <div class="panel gem-panel">
-    <div class="board-head">
+    <div class="gem-tools-grid">
       <div>
-        <h2>보석 계산기</h2>
-        <div class="small">1~5레벨 상자 수량을 입력하고 목표 레벨을 선택하거나, 목표 없이 최대 제작 가능 레벨을 계산합니다.</div>
-      </div>
-    </div>
-    <div class="gem-box">
-      <div class="gem-input-grid" id="gemBoxInputs"></div>
-      <label class="gem-option"><input type="checkbox" id="gemKeepOne" checked> 상자 자리유지</label>
-      <div class="gem-target-block">
-        <div class="small" style="font-weight:900;color:var(--text);margin-bottom:8px">목표 레벨 선택</div>
-        <div class="gem-targets" id="gemTargetButtons"></div>
-      </div>
-      <button class="good gem-calc-btn" type="button" onclick="gemCalculate()">계산하기</button>
-      <div class="gem-result" id="gemResult">목표 레벨을 선택하면 필요한 상자 구성을 계산합니다.
+        <div class="board-head">
+          <div>
+            <h2>보석상자 계산기</h2>
+            <div class="small">1~5레벨 상자 수량을 입력하고 목표 레벨을 선택하거나, 목표 없이 최대 제작 가능 레벨을 계산합니다.</div>
+          </div>
+        </div>
+        <div class="gem-box">
+          <div class="gem-input-grid" id="gemBoxInputs"></div>
+          <label class="gem-option"><input type="checkbox" id="gemKeepOne" checked> 상자 자리유지</label>
+          <div class="gem-target-block">
+            <div class="small" style="font-weight:900;color:var(--text);margin-bottom:8px">목표 레벨 선택</div>
+            <div class="gem-targets" id="gemTargetButtons"></div>
+          </div>
+          <button class="good gem-calc-btn" type="button" onclick="gemCalculate()">계산하기</button>
+          <div class="gem-result" id="gemResult">목표 레벨을 선택하면 필요한 상자 구성을 계산합니다.
 목표 선택 없이 계산하면 최대 제작 가능 레벨을 계산합니다.</div>
+        </div>
+      </div>
+      <div>
+        <div class="board-head">
+          <div>
+            <h2>큐브티켓 계산기</h2>
+            <div class="small">보유 티켓으로 얻을 수 있는 보상 총합과 목표 달성에 필요한 티켓 사용량을 계산합니다.</div>
+          </div>
+          <button type="button" class="ghost" onclick="toggleCubeConfig()">보상 설정</button>
+        </div>
+        <div class="cube-box">
+          <div class="cube-ticket-grid" id="cubeTicketInputs"></div>
+          <button class="good gem-calc-btn" type="button" onclick="cubeCalculate()">산출</button>
+          <div class="cube-result-grid" id="cubeResultGrid"></div>
+          <div class="cube-target-row">
+            <select id="cubeTargetReward"></select>
+            <input id="cubeTargetAmount" type="number" min="0" placeholder="목표치 입력"/>
+            <button type="button" class="secondary" onclick="cubePlanTarget()">목표 계산</button>
+          </div>
+          <div class="cube-plan" id="cubePlanResult">보상을 클릭하거나 목표치를 입력하면 필요한 티켓 사용량을 보여줍니다.</div>
+          <div class="cube-config hidden" id="cubeConfigBox">
+            <div class="board-head">
+              <b>티켓 보상 설정</b>
+              <div class="row"><button type="button" class="ghost" onclick="cubeAddConfig()">티켓 추가</button><button type="button" class="secondary" onclick="cubeSaveConfig()">설정 저장</button></div>
+            </div>
+            <div class="cube-config-list" id="cubeConfigList"></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section></main><div id="charModal" class="modal hidden"><div class="panel"><h2 id="charModalTitle">캐릭터 추가</h2><input id="editingCharId" type="hidden"/><div class="form"><div class="row"><input id="lookupName" placeholder="캐릭터명 입력 후 조회" style="flex:1"><button id="lookupBtn" class="secondary">조회</button></div><div id="lookupPreview" class="preview hidden"></div></div><div class="form two" style="margin-top:8px"><input id="charName" placeholder="캐릭터명"/><input id="charServer" placeholder="서버명"/><input id="charClass" placeholder="클래스명"/><input id="charLevel" type="number" placeholder="아이템 레벨"/><input id="charPower" type="number" placeholder="전투력"/><input id="charMemo" placeholder="메모"/>
@@ -269,7 +326,7 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
 <div class="footer-actions"><button class="ghost" onclick="closeModal('raidModal')">취소</button><button id="saveRaidBtn">저장</button></div></div></div>
 <div id="aiArrangeModal" class="modal hidden"><div class="panel"><h2>AI 배치 요청</h2><div class="ai-config"><div><input id="aiKnightPower" type="number" min="0" placeholder="기사 기준 전투력 (비워두면 평균 전투력 균등 배치)" style="width:100%"/><div class="small" style="margin-top:6px">입력 시 각 파티마다 해당 전투력 이상의 캐릭터를 1명 이상 넣습니다.</div></div><div><div class="board-head" style="margin-bottom:6px"><b>예외 전투력</b><span class="small">현재 배치판 캐릭터만 추가됩니다.</span></div><div class="ai-exception-tools"><input id="aiExceptionSearch" placeholder="캐릭터명 또는 호칭 검색"/><div id="aiExceptionResults" class="ai-exception-results"></div><div id="aiExceptionList" class="ai-exception-list"></div></div></div><div id="aiArrangeSummary" class="small">현재 레이드 배치판에 올라간 캐릭터를 기준으로 배치합니다.</div><div class="ai-progress-wrap"><div id="aiProgressBar" class="ai-progress-bar"></div></div><div id="aiProgressText" class="ai-progress-text">0%</div></div><div class="footer-actions"><button class="ghost" onclick="closeModal('aiArrangeModal')">취소</button><button id="runAiArrangeBtn" class="ai-arrange-btn">배치 시작</button></div></div></div>
 <script>
-const SUPABASE_URL="https://osxjldyafvxuksuynwlw.supabase.co";const SUPABASE_ANON_KEY="sb_publishable_ZgQv1cLriMbjX1UwDWMWDA_2Hs5IKTB";let sb,workspace,currentMember,selectedRaid,characters=[],raids=[],parties=[],placements=[],clears=[],channel,manualSorted=false,selectedMobileCharacterId=null,selectedCharacterId=null,globalNotice="",globalNoticeAuthorId=null,globalNoticeAuthorName="",globalNoticeUpdatedAt="";const $=id=>document.getElementById(id),supportClasses=["바드","홀리나이트","도화가","발키리"];function isSupport(cls){return supportClasses.some(s=>String(cls||"").includes(s))}function cardType(ch){return (isSupport(ch.class_name)&&!ch.force_dealer)?"support":"dealer"}
+const SUPABASE_URL="https://osxjldyafvxuksuynwlw.supabase.co";const SUPABASE_ANON_KEY="sb_publishable_ZgQv1cLriMbjX1UwDWMWDA_2Hs5IKTB";let sb,workspace,currentMember,selectedRaid,characters=[],raids=[],parties=[],placements=[],clears=[],channel,manualSorted=false,selectedMobileCharacterId=null,selectedCharacterId=null,placementUndoStack=[],globalNotice="",globalNoticeAuthorId=null,globalNoticeAuthorName="",globalNoticeUpdatedAt="";const $=id=>document.getElementById(id),supportClasses=["바드","홀리나이트","도화가","발키리"];function isSupport(cls){return supportClasses.some(s=>String(cls||"").includes(s))}function cardType(ch){return (isSupport(ch.class_name)&&!ch.force_dealer)?"support":"dealer"}
 function combatPowerValue(ch){return Number(String(ch.combat_power||0).replace(/,/g,''))||0}
 function itemLevelValue(ch){return Number(String(ch.item_level||0).replace(/,/g,''))||0}
 function selectCharacterForPlacement(id){
@@ -279,7 +336,7 @@ function selectCharacterForPlacement(id){
   document.querySelectorAll(`[data-char-id="${id}"]`).forEach(el=>el.classList.add("selected-pick","mobile-selected"));
 }
 function selectedPlacementCharacter(){return selectedCharacterId||selectedMobileCharacterId||null}
-function isMobileMode(){return window.matchMedia&&window.matchMedia("(max-width:760px)").matches}function selectCharacterForMobile(id){selectCharacterForPlacement(id)}function init(){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));$("connectBtn").onclick=connect;$("addCharBtn").onclick=()=>openCharModal();$("addRaidBtn").onclick=()=>openRaidModal();$("saveCharBtn").onclick=saveCharacter;$("deleteCharBtn").onclick=deleteCharacterCurrent;$("saveRaidBtn").onclick=saveRaid;$("lookupBtn").onclick=lookupCharacterMock;$("addPartyBtn").onclick=addParty;if($("aiArrangeBtn"))$("aiArrangeBtn").onclick=openAiArrangeModal;if($("runAiArrangeBtn"))$("runAiArrangeBtn").onclick=runAiArrange;if($("refreshAllBtn"))$("refreshAllBtn").onclick=()=>refreshAllCharacters(true);$("themeBtn").onclick=toggleTheme;setTimeout(()=>{const bg=$("boundGold"),abg=$("allBoundGold");if(bg&&abg){bg.onchange=()=>{if(bg.checked)abg.checked=false};abg.onchange=()=>{if(abg.checked)bg.checked=false}}},0);$("workspaceCode").value=localStorage.getItem("lostark-last-workspace")||"";$("nicknameInput").value=localStorage.getItem("lostark-last-nickname")||"";if(localStorage.getItem("lostark-theme")==="dark"){document.body.classList.add("dark");$("themeBtn").textContent="라이트모드"}initGemCalculator()}function toggleTheme(){document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");localStorage.setItem("lostark-theme",d?"dark":"light");$("themeBtn").textContent=d?"라이트모드":"다크모드"}function switchTab(id){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===id));document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===id));if(id==="gemcalc")initGemCalculator()}async function connect(){const code=$("workspaceCode").value.trim(),nickname=$("nicknameInput").value.trim();if(!code||!nickname){alert("길드 이름과 호칭을 입력하세요.");return}localStorage.setItem("lostark-last-workspace",code);localStorage.setItem("lostark-last-nickname",nickname);let {data:ws,error}=await sb.from("v6_workspaces").select("*").eq("code",code).maybeSingle();if(error){alert(error.message);return}if(!ws){let c=await sb.from("v6_workspaces").insert({code,name:code}).select("*").single();if(c.error){alert(c.error.message);return}ws=c.data;await insertDefaultRaids(ws.id)}workspace=ws;await ensureWeeklyReset();let {data:m,error:mErr}=await sb.from("v6_members").select("*").eq("workspace_id",workspace.id).eq("nickname",nickname).maybeSingle();if(mErr){alert(mErr.message);return}if(!m){let cm=await sb.from("v6_members").insert({workspace_id:workspace.id,nickname}).select("*").single();if(cm.error){alert(cm.error.message);return}m=cm.data}currentMember=m;$("addCharBtn").disabled=false;$("addRaidBtn").disabled=false;$("addPartyBtn").disabled=false;if($("aiArrangeBtn"))$("aiArrangeBtn").disabled=false;if($("refreshAllBtn"))$("refreshAllBtn").disabled=false;$("myInfo").textContent=`${nickname} 님의 원정대`;await loadAll();subscribeRealtime();startScheduledRefreshWatcher()}async function ensureWeeklyReset(){const key=getResetKeyKST();let {data}=await sb.from("v6_weekly_resets").select("*").eq("workspace_id",workspace.id).eq("reset_key",key).maybeSingle();if(data)return;let ins=await sb.from("v6_weekly_resets").insert({workspace_id:workspace.id,reset_key:key});if(!ins.error){await sb.from("v6_raid_clears").delete().eq("workspace_id",workspace.id)}}function getResetKeyKST(){const now=new Date(),kst=new Date(now.getTime()+9*3600*1000);const day=kst.getUTCDay();let diff=(day-3+7)%7;let reset=new Date(Date.UTC(kst.getUTCFullYear(),kst.getUTCMonth(),kst.getUTCDate()-diff,6,0,0));if(kst<reset)reset=new Date(reset.getTime()-7*86400000);return reset.toISOString().slice(0,10)}async function insertDefaultRaids(id){await sb.from("v6_raids").insert([{workspace_id:id,name:"카제로스 4막 하드",short_name:"4하",min_level:1700,max_level:9999,party_size:8,sort_order:10},{workspace_id:id,name:"카제로스 4막 노말",short_name:"4노",min_level:1680,max_level:9999,party_size:8,sort_order:20},{workspace_id:id,name:"종막 노말",short_name:"종노",min_level:1660,max_level:9999,party_size:8,sort_order:30},{workspace_id:id,name:"에기르 하드",short_name:"에하",min_level:1680,max_level:9999,party_size:8,sort_order:40},{workspace_id:id,name:"베히모스",short_name:"베히",min_level:1640,max_level:9999,party_size:8,sort_order:50}])}async function loadAll(){const [c,r,pt,p,cl,gs]=await Promise.all([sb.from("v6_characters").select("*, member:v6_members(*)").eq("workspace_id",workspace.id).order("item_level",{ascending:false}),sb.from("v6_raids").select("*").eq("workspace_id",workspace.id).order("sort_order",{ascending:true}),sb.from("v6_raid_parties").select("*").eq("workspace_id",workspace.id).order("party_no",{ascending:true}),sb.from("v6_raid_placements").select("*").eq("workspace_id",workspace.id),sb.from("v6_raid_clears").select("*").eq("workspace_id",workspace.id),sb.from("v6_global_settings").select("*").eq("key","home_notice").maybeSingle()]);if(c.error||r.error||pt.error||p.error||cl.error){alert((c.error||r.error||pt.error||p.error||cl.error).message);return}characters=c.data||[];raids=r.data||[];parties=pt.data||[];placements=p.data||[];clears=cl.data||[];globalNotice=gs.data?.value||"";globalNoticeAuthorId=gs.data?.author_member_id||null;globalNoticeAuthorName=gs.data?.author_name||"";globalNoticeUpdatedAt=gs.data?.updated_at||"";if(selectedRaid)selectedRaid=raids.find(x=>x.id===selectedRaid.id)||null;render()}function subscribeRealtime(){if(channel)sb.removeChannel(channel);channel=sb.channel("v5-"+workspace.id).on("postgres_changes",{event:"*",schema:"public",table:"v6_characters",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raids",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_parties",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_placements",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_clears",filter:`workspace_id=eq.${workspace.id}`},loadAll).subscribe()}function render(){renderRaidSelector();renderMyCharacters();renderBoard();renderEligible();renderRaidManagement();renderMembers()}function eligible(ch,raid){let lv=Number(ch.item_level||0);return raid&&lv>=Number(raid.min_level||0)&&lv<Number(raid.max_level||99999)}function partyCleared(pid){return clears.some(c=>c.party_id===pid&&c.is_clear)}function charById(id){return characters.find(c=>c.id===id)}function placeAt(pid,slot){return placements.find(p=>p.party_id===pid&&p.slot_no===slot)}function charAssignmentAll(ch){const out=[];placements.filter(pl=>pl.character_id===ch.id).forEach(pl=>{const pt=parties.find(p=>p.id===pl.party_id);if(!pt)return;const raid=raids.find(r=>r.id===pt.raid_id);if(!raid)return;out.push({text:`${raid.short_name||raid.name}-${pt.party_no}파티`,done:partyCleared(pt.id),raid_id:raid.id,party_id:pt.id})});out.sort((a,b)=>Number(a.done)-Number(b.done)||String(a.text).localeCompare(String(b.text),'ko'));return out}function charAssignment(ch){return charAssignmentAll(ch).find(a=>a.raid_id===(selectedRaid&&selectedRaid.id))||null}function jumpToParty(raidId,partyId){const r=raids.find(x=>x.id===raidId);if(r){selectedRaid=r;render();setTimeout(()=>{const el=document.getElementById("party-"+partyId);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),2400)}},80)}}function placedInSelectedRaid(chId){if(!selectedRaid)return false;const rps=parties.filter(p=>p.raid_id===selectedRaid.id).map(p=>p.id);return placements.some(pl=>pl.character_id===chId&&rps.includes(pl.party_id))}function renderRaidSelector(){
+function isMobileMode(){return window.matchMedia&&window.matchMedia("(max-width:760px)").matches}function selectCharacterForMobile(id){selectCharacterForPlacement(id)}function init(){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));$("connectBtn").onclick=connect;$("addCharBtn").onclick=()=>openCharModal();$("addRaidBtn").onclick=()=>openRaidModal();$("saveCharBtn").onclick=saveCharacter;$("deleteCharBtn").onclick=deleteCharacterCurrent;$("saveRaidBtn").onclick=saveRaid;$("lookupBtn").onclick=lookupCharacterMock;$("addPartyBtn").onclick=addParty;if($("undoPlacementBtn"))$("undoPlacementBtn").onclick=undoPlacement;if($("aiArrangeBtn"))$("aiArrangeBtn").onclick=openAiArrangeModal;if($("runAiArrangeBtn"))$("runAiArrangeBtn").onclick=runAiArrange;if($("refreshAllBtn"))$("refreshAllBtn").onclick=()=>refreshAllCharacters(true);$("themeBtn").onclick=toggleTheme;setTimeout(()=>{const bg=$("boundGold"),abg=$("allBoundGold");if(bg&&abg){bg.onchange=()=>{if(bg.checked)abg.checked=false};abg.onchange=()=>{if(abg.checked)bg.checked=false}}},0);$("workspaceCode").value=localStorage.getItem("lostark-last-workspace")||"";$("nicknameInput").value=localStorage.getItem("lostark-last-nickname")||"";if(localStorage.getItem("lostark-theme")==="dark"){document.body.classList.add("dark");$("themeBtn").textContent="라이트모드"}initGemCalculator()}function toggleTheme(){document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");localStorage.setItem("lostark-theme",d?"dark":"light");$("themeBtn").textContent=d?"라이트모드":"다크모드"}function switchTab(id){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===id));document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===id));if(id==="gemcalc")initGemCalculator()}async function connect(){const code=$("workspaceCode").value.trim(),nickname=$("nicknameInput").value.trim();if(!code||!nickname){alert("길드 이름과 호칭을 입력하세요.");return}localStorage.setItem("lostark-last-workspace",code);localStorage.setItem("lostark-last-nickname",nickname);let {data:ws,error}=await sb.from("v6_workspaces").select("*").eq("code",code).maybeSingle();if(error){alert(error.message);return}if(!ws){let c=await sb.from("v6_workspaces").insert({code,name:code}).select("*").single();if(c.error){alert(c.error.message);return}ws=c.data;await insertDefaultRaids(ws.id)}workspace=ws;await ensureWeeklyReset();let {data:m,error:mErr}=await sb.from("v6_members").select("*").eq("workspace_id",workspace.id).eq("nickname",nickname).maybeSingle();if(mErr){alert(mErr.message);return}if(!m){let cm=await sb.from("v6_members").insert({workspace_id:workspace.id,nickname}).select("*").single();if(cm.error){alert(cm.error.message);return}m=cm.data}currentMember=m;$("addCharBtn").disabled=false;$("addRaidBtn").disabled=false;$("addPartyBtn").disabled=false;if($("aiArrangeBtn"))$("aiArrangeBtn").disabled=false;if($("refreshAllBtn"))$("refreshAllBtn").disabled=false;$("myInfo").textContent=`${nickname} 님의 원정대`;await loadAll();subscribeRealtime();startScheduledRefreshWatcher()}async function ensureWeeklyReset(){const key=getResetKeyKST();let {data}=await sb.from("v6_weekly_resets").select("*").eq("workspace_id",workspace.id).eq("reset_key",key).maybeSingle();if(data)return;let ins=await sb.from("v6_weekly_resets").insert({workspace_id:workspace.id,reset_key:key});if(!ins.error){await sb.from("v6_raid_clears").delete().eq("workspace_id",workspace.id)}}function getResetKeyKST(){const now=new Date(),kst=new Date(now.getTime()+9*3600*1000);const day=kst.getUTCDay();let diff=(day-3+7)%7;let reset=new Date(Date.UTC(kst.getUTCFullYear(),kst.getUTCMonth(),kst.getUTCDate()-diff,6,0,0));if(kst<reset)reset=new Date(reset.getTime()-7*86400000);return reset.toISOString().slice(0,10)}async function insertDefaultRaids(id){await sb.from("v6_raids").insert([{workspace_id:id,name:"카제로스 4막 하드",short_name:"4하",min_level:1700,max_level:9999,party_size:8,sort_order:10},{workspace_id:id,name:"카제로스 4막 노말",short_name:"4노",min_level:1680,max_level:9999,party_size:8,sort_order:20},{workspace_id:id,name:"종막 노말",short_name:"종노",min_level:1660,max_level:9999,party_size:8,sort_order:30},{workspace_id:id,name:"에기르 하드",short_name:"에하",min_level:1680,max_level:9999,party_size:8,sort_order:40},{workspace_id:id,name:"베히모스",short_name:"베히",min_level:1640,max_level:9999,party_size:8,sort_order:50}])}async function loadAll(){const [c,r,pt,p,cl,gs]=await Promise.all([sb.from("v6_characters").select("*, member:v6_members(*)").eq("workspace_id",workspace.id).order("item_level",{ascending:false}),sb.from("v6_raids").select("*").eq("workspace_id",workspace.id).order("sort_order",{ascending:true}),sb.from("v6_raid_parties").select("*").eq("workspace_id",workspace.id).order("party_no",{ascending:true}),sb.from("v6_raid_placements").select("*").eq("workspace_id",workspace.id),sb.from("v6_raid_clears").select("*").eq("workspace_id",workspace.id),sb.from("v6_global_settings").select("*").eq("key","home_notice").maybeSingle()]);if(c.error||r.error||pt.error||p.error||cl.error){alert((c.error||r.error||pt.error||p.error||cl.error).message);return}characters=c.data||[];raids=r.data||[];parties=pt.data||[];placements=p.data||[];clears=cl.data||[];globalNotice=gs.data?.value||"";globalNoticeAuthorId=gs.data?.author_member_id||null;globalNoticeAuthorName=gs.data?.author_name||"";globalNoticeUpdatedAt=gs.data?.updated_at||"";if(selectedRaid)selectedRaid=raids.find(x=>x.id===selectedRaid.id)||null;render()}function subscribeRealtime(){if(channel)sb.removeChannel(channel);channel=sb.channel("v5-"+workspace.id).on("postgres_changes",{event:"*",schema:"public",table:"v6_characters",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raids",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_parties",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_placements",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_clears",filter:`workspace_id=eq.${workspace.id}`},loadAll).subscribe()}function render(){renderRaidSelector();renderMyCharacters();renderBoard();renderEligible();renderRaidManagement();renderMembers()}function eligible(ch,raid){let lv=Number(ch.item_level||0);return raid&&lv>=Number(raid.min_level||0)&&lv<Number(raid.max_level||99999)}function partyCleared(pid){return clears.some(c=>c.party_id===pid&&c.is_clear)}function charById(id){return characters.find(c=>c.id===id)}function placeAt(pid,slot){return placements.find(p=>p.party_id===pid&&p.slot_no===slot)}function charAssignmentAll(ch){const out=[];placements.filter(pl=>pl.character_id===ch.id).forEach(pl=>{const pt=parties.find(p=>p.id===pl.party_id);if(!pt)return;const raid=raids.find(r=>r.id===pt.raid_id);if(!raid)return;out.push({text:`${raid.short_name||raid.name}-${pt.party_no}파티`,done:partyCleared(pt.id),raid_id:raid.id,party_id:pt.id})});out.sort((a,b)=>Number(a.done)-Number(b.done)||String(a.text).localeCompare(String(b.text),'ko'));return out}function charAssignment(ch){return charAssignmentAll(ch).find(a=>a.raid_id===(selectedRaid&&selectedRaid.id))||null}function jumpToParty(raidId,partyId){const r=raids.find(x=>x.id===raidId);if(r){selectedRaid=r;render();setTimeout(()=>{const el=document.getElementById("party-"+partyId);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),2400)}},80)}}function placedInSelectedRaid(chId){if(!selectedRaid)return false;const rps=parties.filter(p=>p.raid_id===selectedRaid.id).map(p=>p.id);return placements.some(pl=>pl.character_id===chId&&rps.includes(pl.party_id))}const UNDO_TTL_MS=10*60*1000;function prunePlacementUndo(){const now=Date.now();placementUndoStack=placementUndoStack.filter(s=>now-(s.savedAt||0)<=UNDO_TTL_MS)}function currentRaidPartyIds(){return selectedRaid?parties.filter(p=>p.raid_id===selectedRaid.id).map(p=>p.id):[]}function placementSnapshot(label=""){const partyIds=currentRaidPartyIds();return {label,savedAt:Date.now(),raidId:selectedRaid?.id||null,parties:parties.filter(p=>partyIds.includes(p.id)).map(p=>({id:p.id,party_no:p.party_no})),placements:placements.filter(p=>partyIds.includes(p.party_id)).map(p=>({workspace_id:p.workspace_id,party_id:p.party_id,character_id:p.character_id,slot_no:p.slot_no}))}}function updateUndoButton(){prunePlacementUndo();const btn=$("undoPlacementBtn");if(btn)btn.disabled=!selectedRaid||!placementUndoStack.length||placementUndoStack[placementUndoStack.length-1].raidId!==selectedRaid.id}function pushPlacementUndo(label){if(!selectedRaid)return;prunePlacementUndo();placementUndoStack.push(placementSnapshot(label));if(placementUndoStack.length>30)placementUndoStack.shift();updateUndoButton()}async function undoPlacement(){prunePlacementUndo();const snap=placementUndoStack.pop();if(!snap||!workspace){updateUndoButton();return}const raid=raids.find(r=>r.id===snap.raidId);if(raid)selectedRaid=raid;const currentIds=parties.filter(p=>p.raid_id===snap.raidId).map(p=>p.id);if(currentIds.length)await sb.from("v6_raid_placements").delete().in("party_id",currentIds);const snapIds=snap.parties.map(p=>p.id);const extraIds=currentIds.filter(id=>!snapIds.includes(id));if(extraIds.length)await sb.from("v6_raid_parties").delete().in("id",extraIds);if(snap.placements.length){const res=await sb.from("v6_raid_placements").insert(snap.placements);if(res.error)alert(res.error.message)}await loadAll();updateUndoButton()}function renderRaidSelector(){
 const box=$("raidSelector");box.innerHTML="";
 let home=document.createElement("div");
 home.className="raid-card home-card "+(!selectedRaid?"active":"");
@@ -474,6 +531,7 @@ mine.forEach(ch=>{
 const board=$("raidBoard");board.innerHTML="";
 $("addPartyBtn").disabled=!selectedRaid;
 if($("aiArrangeBtn"))$("aiArrangeBtn").disabled=!selectedRaid;
+updateUndoButton();
 if(!selectedRaid){
   $("selectedRaidText").textContent="홈 · 공지와 전체 원정대 현황";
   board.className="board";
@@ -650,6 +708,7 @@ async function runAiArrange(){
   if(!plan||!plan.groups.length){aiSetProgress(100,"배치 불가");return}
   const placedIds=new Set(plan.groups.flat().map(ch=>ch.id));
   try{
+    pushPlacementUndo("AI 배치");
     if(btn){btn.disabled=true;btn.textContent="배치 중..."}
     aiSetProgress(22,"파티 준비");
     const targetParties=await aiEnsureParties(plan.groups.length);
@@ -689,6 +748,7 @@ const selectedRaidPartyIds=parties.filter(p=>p.raid_id===selectedRaid.id).map(p=
 const sourcePlacement=sourcePlacementId?placements.find(p=>p.id===sourcePlacementId):null;
 if(sourcePlacement){
   if(existing?.id===sourcePlacement.id)return;
+  pushPlacementUndo("수동 이동");
 
   if(existing){
     const sourcePartyId=sourcePlacement.party_id;
@@ -718,7 +778,10 @@ if(sourcePlacement){
 
 if(existing){
   if(!confirm("기존 배치를 교체할까요?"))return;
+  pushPlacementUndo("수동 배치");
   await sb.from("v6_raid_placements").delete().eq("id",existing.id);
+}else{
+  pushPlacementUndo("수동 배치");
 }
 
 const prevs=placements.filter(p=>p.character_id===chId&&selectedRaidPartyIds.includes(p.party_id));
@@ -736,7 +799,7 @@ if(error)alert(error.message);
 selectedMobileCharacterId=null;
 selectedCharacterId=null;
 await loadAll()
-}async function removePlacement(p){await sb.from("v6_raid_placements").delete().eq("id",p.id);await loadAll()}function renderEligible(){
+}async function removePlacement(p){pushPlacementUndo("배치 해제");await sb.from("v6_raid_placements").delete().eq("id",p.id);await loadAll()}function renderEligible(){
 const box=$("eligibleList");box.innerHTML="";
 const list=(selectedRaid?characters.filter(c=>eligible(c,selectedRaid)):[...characters])
   .sort((a,b)=>{
@@ -814,6 +877,15 @@ box.innerHTML=`<div class="member-groups">${Object.entries(grouped).map(([n,list
 const GEM_INPUT_MAX_LEVEL=5;
 const GEM_CALC_MAX_LEVEL=20;
 let gemSelectedTarget=null;
+const CUBE_REWARD_KEYS=[
+  {key:"gemPower",name:"보석",unit:"레벨",target:true},
+  {key:"leap",name:"운명의 돌파석",unit:"개",target:true},
+  {key:"breath",name:"용숨 / 빙숨",unit:"개",target:true},
+  {key:"silver",name:"실링",unit:"",target:true,prefix:"약 "},
+  {key:"cardXp",name:"카드 경험치",unit:"",target:true},
+  {key:"expeditionXp",name:"원정대 경험치",unit:"",target:true}
+];
+let cubeTickets=[];
 
 function initGemCalculator(){
   const boxInputs=$("gemBoxInputs");
@@ -836,6 +908,7 @@ function initGemCalculator(){
     btn.onclick=()=>gemSelectTarget(i,btn);
     targetButtons.appendChild(btn);
   }
+  initCubeCalculator();
 }
 
 function gemSelectTarget(level,btn){
@@ -941,6 +1014,156 @@ function gemCalcTarget(target){
   if($("gemKeepOne")?.checked)text+=`\n\n※ 상자 자리유지 적용됨: 각 레벨 상자에서 1개씩 제외하고 계산`;
 
   $("gemResult").innerText=text;
+}
+
+function cubeDefaultTickets(){
+  return [
+    {name:"1해금",count:0,rewards:{gemLevel:1,gemBoxes:9,leap:14,yong:4,bing:4,silver:140000,cardXp:14000,expeditionXp:6435}},
+    {name:"2해금",count:0,rewards:{gemLevel:2,gemBoxes:6,leap:25,yong:5,bing:5,silver:150000,cardXp:14500,expeditionXp:6435}},
+    {name:"3해금",count:0,rewards:{gemLevel:2,gemBoxes:8,leap:32,yong:6,bing:6,silver:160000,cardXp:15000,expeditionXp:6435}},
+    {name:"4해금",count:0,rewards:{gemLevel:2,gemBoxes:11,leap:41,yong:8,bing:8,silver:180000,cardXp:15500,expeditionXp:6435}}
+  ];
+}
+
+function cubeLoadTickets(){
+  try{
+    const saved=JSON.parse(localStorage.getItem("lostark-cube-tickets")||"null");
+    if(Array.isArray(saved)&&saved.length)return saved;
+  }catch(e){}
+  return cubeDefaultTickets();
+}
+
+function initCubeCalculator(){
+  if($("cubeTicketInputs")?.dataset.ready==="1")return;
+  cubeTickets=cubeLoadTickets();
+  renderCubeTicketInputs();
+  renderCubeTargets();
+  renderCubeConfig();
+  cubeCalculate();
+}
+
+function cubeGemPower(ticket){
+  const r=ticket.rewards||{};
+  return (Number(r.gemBoxes)||0)*Math.pow(3,(Number(r.gemLevel)||1)-1);
+}
+
+function cubeGemLines(power){
+  const boxes=Array(GEM_CALC_MAX_LEVEL+1).fill(0);
+  boxes[1]=Number(power||0);
+  const merged=gemMergeAll(boxes);
+  const lines=[];
+  for(let i=GEM_CALC_MAX_LEVEL;i>=1;i--){
+    if(merged[i]>0)lines.push(`${i}레벨 ${Number(merged[i]).toLocaleString()}개`);
+  }
+  return lines;
+}
+
+function cubeTotals(counts=null){
+  const out={gemPower:0,leap:0,yong:0,bing:0,breath:0,silver:0,cardXp:0,expeditionXp:0};
+  cubeTickets.forEach((t,i)=>{
+    const count=counts?Number(counts[i]||0):Number($("cubeTicket"+i)?.value||0);
+    out.gemPower+=cubeGemPower(t)*count;
+    out.yong+=(Number(t.rewards?.yong)||0)*count;
+    out.bing+=(Number(t.rewards?.bing)||0)*count;
+    CUBE_REWARD_KEYS.filter(r=>!["gemPower","breath"].includes(r.key)).forEach(r=>out[r.key]+=(Number(t.rewards?.[r.key])||0)*count);
+  });
+  out.breath=Math.min(out.yong,out.bing);
+  return out;
+}
+
+function cubeFormatValue(key,value){
+  if(key==="gemPower"){
+    return cubeGemLines(value).join("\n")||"보석 없음";
+  }
+  if(key==="breath")return `${Number(value||0).toLocaleString()}개씩`;
+  const meta=CUBE_REWARD_KEYS.find(r=>r.key===key);
+  return `${meta?.prefix||""}${Number(value||0).toLocaleString()}${meta?.unit?meta.unit:""}`;
+}
+
+function renderCubeTicketInputs(){
+  const box=$("cubeTicketInputs");if(!box)return;
+  box.dataset.ready="1";
+  box.innerHTML=cubeTickets.map((t,i)=>`<div class="cube-ticket-item"><label>${esc(t.name)}</label><input id="cubeTicket${i}" type="number" min="0" value="${Number(t.count||0)}" onchange="cubeTickets[${i}].count=Number(this.value)||0"></div>`).join("");
+}
+
+function renderCubeTargets(){
+  const sel=$("cubeTargetReward");if(!sel)return;
+  sel.innerHTML=CUBE_REWARD_KEYS.filter(r=>r.target).map(r=>`<option value="${r.key}">${r.name}</option>`).join("");
+}
+
+function cubeCalculate(){
+  cubeTickets.forEach((t,i)=>t.count=Number($("cubeTicket"+i)?.value||0));
+  const totals=cubeTotals();
+  const box=$("cubeResultGrid");
+  if(box){
+    const sideOrder=["leap","breath","silver","cardXp","expeditionXp"];
+    box.innerHTML=`<button type="button" class="cube-result-card gem-card" onclick="cubeSelectTarget('gemPower')"><b>보석</b><div class="cube-gem-lines">${cubeGemLines(totals.gemPower).map(x=>`<div>${esc(x)}</div>`).join("")||"<div>보석 없음</div>"}</div></button><div class="cube-side-results">${sideOrder.map(key=>{const r=CUBE_REWARD_KEYS.find(x=>x.key===key);return `<button type="button" class="cube-result-card" onclick="cubeSelectTarget('${key}')"><b>${r.name}</b><strong>${cubeFormatValue(key,totals[key])}</strong></button>`}).join("")}</div>`;
+  }
+  localStorage.setItem("lostark-cube-tickets",JSON.stringify(cubeTickets));
+}
+
+function cubeSelectTarget(key){
+  if($("cubeTargetReward"))$("cubeTargetReward").value=key;
+  if($("cubeTargetAmount"))$("cubeTargetAmount").placeholder=key==="gemPower"?"목표 보석 레벨 입력":"목표치 입력";
+  $("cubeTargetAmount")?.focus();
+}
+
+function cubePlanTarget(){
+  cubeCalculate();
+  const key=$("cubeTargetReward")?.value;
+  const rawTarget=Number($("cubeTargetAmount")?.value||0);
+  if(!key||rawTarget<=0){$("cubePlanResult").innerHTML='<div class="cube-plan-title">목표치를 입력하세요.</div><div class="cube-plan-detail">보상 종류를 고르고 목표 숫자를 입력하면 필요한 티켓을 계산합니다.</div>';return}
+  const target=key==="gemPower"?Math.pow(3,rawTarget-1):rawTarget;
+  const owned=cubeTickets.map((t,i)=>Number($("cubeTicket"+i)?.value||0));
+  const per=cubeTickets.map(t=>{
+    if(key==="gemPower")return cubeGemPower(t);
+    if(key==="breath")return Math.min(Number(t.rewards?.yong||0),Number(t.rewards?.bing||0));
+    return Number(t.rewards?.[key]||0);
+  });
+  const order=per.map((v,i)=>({i,v})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  const use=Array(cubeTickets.length).fill(0);
+  let gained=0;
+  for(const item of order){
+    if(gained>=target)break;
+    const need=Math.ceil((target-gained)/item.v);
+    const take=Math.min(owned[item.i],need);
+    use[item.i]=take;
+    gained+=take*item.v;
+  }
+  const meta=CUBE_REWARD_KEYS.find(r=>r.key===key);
+  const targetLabel=key==="gemPower"?`${rawTarget}레벨 보석 1개`:`${meta.name} ${cubeFormatValue(key,target)}`;
+  if(gained<target){$("cubePlanResult").innerHTML=`<div class="cube-plan-title">${esc(targetLabel)}</div><div class="cube-plan-main">목표 달성 불가</div><div class="cube-plan-detail">보유 티켓 최대치: ${esc(cubeFormatValue(key,gained))}</div>`;return}
+  const lines=use.map((n,i)=>n?`${cubeTickets[i].name} ${n}개`:"").filter(Boolean);
+  $("cubePlanResult").innerHTML=`<div class="cube-plan-title">${esc(targetLabel)}</div><div class="cube-plan-main">목표 달성 가능</div><div class="cube-plan-detail">사용 티켓: ${esc(lines.join(", "))}<br>예상 획득: ${esc(cubeFormatValue(key,gained))}</div>`;
+}
+
+function toggleCubeConfig(){
+  $("cubeConfigBox")?.classList.toggle("hidden");
+}
+
+function renderCubeConfig(){
+  const box=$("cubeConfigList");if(!box)return;
+  box.innerHTML=cubeTickets.map((t,i)=>`<div class="cube-config-card"><div class="cube-config-head"><input data-cube-field="name" data-cube-index="${i}" value="${esc(t.name)}"/><button type="button" class="danger" onclick="cubeRemoveConfig(${i})">삭제</button></div><div class="cube-reward-editor"><label>보석 레벨<input type="number" data-cube-field="gemLevel" data-cube-index="${i}" value="${Number(t.rewards?.gemLevel||1)}"></label><label>보석 상자<input type="number" data-cube-field="gemBoxes" data-cube-index="${i}" value="${Number(t.rewards?.gemBoxes||0)}"></label><label>돌파석<input type="number" data-cube-field="leap" data-cube-index="${i}" value="${Number(t.rewards?.leap||0)}"></label><label>용숨<input type="number" data-cube-field="yong" data-cube-index="${i}" value="${Number(t.rewards?.yong||0)}"></label><label>빙숨<input type="number" data-cube-field="bing" data-cube-index="${i}" value="${Number(t.rewards?.bing||0)}"></label><label>실링<input type="number" data-cube-field="silver" data-cube-index="${i}" value="${Number(t.rewards?.silver||0)}"></label><label>카경<input type="number" data-cube-field="cardXp" data-cube-index="${i}" value="${Number(t.rewards?.cardXp||0)}"></label><label>원대경험치<input type="number" data-cube-field="expeditionXp" data-cube-index="${i}" value="${Number(t.rewards?.expeditionXp||0)}"></label></div></div>`).join("");
+}
+
+function cubeSaveConfig(){
+  document.querySelectorAll("[data-cube-field]").forEach(input=>{
+    const i=Number(input.dataset.cubeIndex),field=input.dataset.cubeField;
+    if(field==="name")cubeTickets[i].name=input.value.trim()||`티켓 ${i+1}`;
+    else cubeTickets[i].rewards[field]=Number(input.value)||0;
+  });
+  localStorage.setItem("lostark-cube-tickets",JSON.stringify(cubeTickets));
+  renderCubeTicketInputs();renderCubeTargets();renderCubeConfig();cubeCalculate();
+}
+
+function cubeAddConfig(){
+  cubeTickets.push({name:`새 티켓 ${cubeTickets.length+1}`,count:0,rewards:{gemLevel:1,gemBoxes:0,leap:0,yong:0,bing:0,silver:0,cardXp:0,expeditionXp:6435}});
+  renderCubeTicketInputs();renderCubeConfig();cubeCalculate();
+}
+
+function cubeRemoveConfig(i){
+  cubeTickets.splice(i,1);
+  renderCubeTicketInputs();renderCubeConfig();cubeCalculate();
 }
 
 init();
