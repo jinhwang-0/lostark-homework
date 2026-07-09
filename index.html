@@ -199,14 +199,28 @@ body.dark .raid-card.home-card{
 .gem-calc-btn{width:100%;padding:11px 12px;border-radius:12px}
 .gem-result{margin-top:12px;padding:13px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.18);border-radius:14px;white-space:pre-line;line-height:1.65;font-size:14px;color:var(--text)}
 body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.18)}
+.ai-arrange-btn{background:linear-gradient(135deg,#0f766e,#2563eb)}
+.ai-config{display:grid;gap:12px}
+.ai-exception-tools{display:grid;gap:8px}
+.ai-exception-results,.ai-exception-list{display:grid;gap:6px;max-height:170px;overflow:auto;border:1px solid var(--line);border-radius:14px;padding:8px;background:var(--panel2)}
+.ai-exception-results:empty{display:none}
+.ai-exception-row{display:grid;grid-template-columns:minmax(0,1fr) 128px;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px}
+.ai-exception-row input{width:100%;padding:7px 8px}
+.ai-result-row{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px}
+.ai-result-row button{padding:6px 9px;font-size:12px;border-radius:9px}
+.ai-exception-row.has-remove{grid-template-columns:minmax(0,1fr) 128px auto}
+.ai-progress-wrap{height:18px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);overflow:hidden;margin-top:10px}
+.ai-progress-bar{height:100%;width:0%;background:linear-gradient(135deg,var(--good),var(--accent2));transition:width .18s ease}
+.ai-progress-text{font-size:12px;color:var(--muted);font-weight:900;text-align:right;margin-top:4px}
 @media(max-width:760px){
   .gem-panel{max-width:none}
   .gem-input-grid{grid-template-columns:1fr}
   .gem-targets{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ai-exception-row{grid-template-columns:1fr}
 }
 </style>
 
-</head><body><header><div class="wrap"><div class="top"><div class="title-tabs"><div><h1>로아 레이드 현황판</h1><div class="subtitle">Made by 진황</div></div><div class="tabs"><div class="tab active" data-tab="homework">숙제 관리</div><div class="tab" data-tab="raids">레이드 관리</div><div class="tab" data-tab="members">길드원/캐릭터</div><div class="tab" data-tab="gemcalc">보석 계산기</div></div></div><div class="row"><input id="workspaceCode" placeholder="길드 이름"/><input id="nicknameInput" placeholder="호칭"/><button id="connectBtn">접속</button><button id="themeBtn" class="ghost">다크모드</button></div></div></div></header><main><div class="notice">매주 수요일 오전 6시 이후 첫 접속 시 파티 완료 상태만 자동 초기화</div><section id="homework" class="section active"><div class="layout"><aside class="panel side-sticky"><div class="board-head"><h2>내 원정대</h2><button id="addCharBtn" class="secondary" disabled>캐릭터 추가</button></div><div class="small" id="myInfo">접속 후 표시됩니다.</div><div id="myCharacterList" class="list" style="margin-top:10px"></div></aside><section class="panel"><div class="board-head"><div><h2>레이드 배치판</h2><div id="selectedRaidText" class="small">레이드를 선택하세요.</div></div><div class="row"><button id="addPartyBtn" class="good" disabled>+ 파티 추가</button><button id="refreshAllBtn" class="secondary" disabled>갱신</button></div></div><div class="raid-category-box"><div id="raidSelector" class="raid-select-card"></div></div><div class="board-divider"></div><div id="raidBoard" class="board"></div></section><aside class="panel side-sticky"><h2>레이드 가능 길드원</h2><div id="eligibleInfo" class="small">레이드를 선택하면 표시됩니다.</div><div id="eligibleList" class="list" style="margin-top:10px"></div></aside></div></section><section id="raids" class="section"><div class="panel"><div class="board-head"><div><h2>레이드 관리</h2><div class="small">레이드별 최소/최대 레벨(미만)(최대 미만)과 인원수만 설정합니다.</div></div><button id="addRaidBtn" disabled>레이드 추가</button></div><div id="raidManageList"></div></div></section><section id="members" class="section"><div class="panel"><h2>길드원/캐릭터 현황</h2><div id="memberCharacterList" style="margin-top:12px"></div></div></section>
+</head><body><header><div class="wrap"><div class="top"><div class="title-tabs"><div><h1>로아 레이드 현황판</h1><div class="subtitle">Made by 진황</div></div><div class="tabs"><div class="tab active" data-tab="homework">숙제 관리</div><div class="tab" data-tab="raids">레이드 관리</div><div class="tab" data-tab="members">길드원/캐릭터</div><div class="tab" data-tab="gemcalc">보석 계산기</div></div></div><div class="row"><input id="workspaceCode" placeholder="길드 이름"/><input id="nicknameInput" placeholder="호칭"/><button id="connectBtn">접속</button><button id="themeBtn" class="ghost">다크모드</button></div></div></div></header><main><div class="notice">매주 수요일 오전 6시 이후 첫 접속 시 파티 완료 상태만 자동 초기화</div><section id="homework" class="section active"><div class="layout"><aside class="panel side-sticky"><div class="board-head"><h2>내 원정대</h2><button id="addCharBtn" class="secondary" disabled>캐릭터 추가</button></div><div class="small" id="myInfo">접속 후 표시됩니다.</div><div id="myCharacterList" class="list" style="margin-top:10px"></div></aside><section class="panel"><div class="board-head"><div><h2>레이드 배치판</h2><div id="selectedRaidText" class="small">레이드를 선택하세요.</div></div><div class="row"><button id="aiArrangeBtn" class="ai-arrange-btn" disabled>AI배치요청</button><button id="addPartyBtn" class="good" disabled>+ 파티 추가</button><button id="refreshAllBtn" class="secondary" disabled>갱신</button></div></div><div class="raid-category-box"><div id="raidSelector" class="raid-select-card"></div></div><div class="board-divider"></div><div id="raidBoard" class="board"></div></section><aside class="panel side-sticky"><h2>레이드 가능 길드원</h2><div id="eligibleInfo" class="small">레이드를 선택하면 표시됩니다.</div><div id="eligibleList" class="list" style="margin-top:10px"></div></aside></div></section><section id="raids" class="section"><div class="panel"><div class="board-head"><div><h2>레이드 관리</h2><div class="small">레이드별 최소/최대 레벨(미만)(최대 미만)과 인원수만 설정합니다.</div></div><button id="addRaidBtn" disabled>레이드 추가</button></div><div id="raidManageList"></div></div></section><section id="members" class="section"><div class="panel"><h2>길드원/캐릭터 현황</h2><div id="memberCharacterList" style="margin-top:12px"></div></div></section>
 <section id="gemcalc" class="section">
   <div class="panel gem-panel">
     <div class="board-head">
@@ -253,6 +267,7 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
   <div class="small">입력한 관문별 골드의 합계가 레이드 카드와 파티 상단에 클리어골드로 표시됩니다.</div>
 </div>
 <div class="footer-actions"><button class="ghost" onclick="closeModal('raidModal')">취소</button><button id="saveRaidBtn">저장</button></div></div></div>
+<div id="aiArrangeModal" class="modal hidden"><div class="panel"><h2>AI 배치 요청</h2><div class="ai-config"><div><input id="aiKnightPower" type="number" min="0" placeholder="기사 기준 전투력 (비워두면 평균 전투력 균등 배치)" style="width:100%"/><div class="small" style="margin-top:6px">입력 시 각 파티마다 해당 전투력 이상의 캐릭터를 1명 이상 넣습니다.</div></div><div><div class="board-head" style="margin-bottom:6px"><b>예외 전투력</b><span class="small">현재 배치판 캐릭터만 추가됩니다.</span></div><div class="ai-exception-tools"><input id="aiExceptionSearch" placeholder="캐릭터명 또는 호칭 검색"/><div id="aiExceptionResults" class="ai-exception-results"></div><div id="aiExceptionList" class="ai-exception-list"></div></div></div><div id="aiArrangeSummary" class="small">현재 레이드 배치판에 올라간 캐릭터를 기준으로 배치합니다.</div><div class="ai-progress-wrap"><div id="aiProgressBar" class="ai-progress-bar"></div></div><div id="aiProgressText" class="ai-progress-text">0%</div></div><div class="footer-actions"><button class="ghost" onclick="closeModal('aiArrangeModal')">취소</button><button id="runAiArrangeBtn" class="ai-arrange-btn">배치 시작</button></div></div></div>
 <script>
 const SUPABASE_URL="https://osxjldyafvxuksuynwlw.supabase.co";const SUPABASE_ANON_KEY="sb_publishable_ZgQv1cLriMbjX1UwDWMWDA_2Hs5IKTB";let sb,workspace,currentMember,selectedRaid,characters=[],raids=[],parties=[],placements=[],clears=[],channel,manualSorted=false,selectedMobileCharacterId=null,selectedCharacterId=null,globalNotice="",globalNoticeAuthorId=null,globalNoticeAuthorName="",globalNoticeUpdatedAt="";const $=id=>document.getElementById(id),supportClasses=["바드","홀리나이트","도화가","발키리"];function isSupport(cls){return supportClasses.some(s=>String(cls||"").includes(s))}function cardType(ch){return (isSupport(ch.class_name)&&!ch.force_dealer)?"support":"dealer"}
 function combatPowerValue(ch){return Number(String(ch.combat_power||0).replace(/,/g,''))||0}
@@ -264,7 +279,7 @@ function selectCharacterForPlacement(id){
   document.querySelectorAll(`[data-char-id="${id}"]`).forEach(el=>el.classList.add("selected-pick","mobile-selected"));
 }
 function selectedPlacementCharacter(){return selectedCharacterId||selectedMobileCharacterId||null}
-function isMobileMode(){return window.matchMedia&&window.matchMedia("(max-width:760px)").matches}function selectCharacterForMobile(id){selectCharacterForPlacement(id)}function init(){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));$("connectBtn").onclick=connect;$("addCharBtn").onclick=()=>openCharModal();$("addRaidBtn").onclick=()=>openRaidModal();$("saveCharBtn").onclick=saveCharacter;$("deleteCharBtn").onclick=deleteCharacterCurrent;$("saveRaidBtn").onclick=saveRaid;$("lookupBtn").onclick=lookupCharacterMock;$("addPartyBtn").onclick=addParty;if($("refreshAllBtn"))$("refreshAllBtn").onclick=()=>refreshAllCharacters(true);$("themeBtn").onclick=toggleTheme;setTimeout(()=>{const bg=$("boundGold"),abg=$("allBoundGold");if(bg&&abg){bg.onchange=()=>{if(bg.checked)abg.checked=false};abg.onchange=()=>{if(abg.checked)bg.checked=false}}},0);$("workspaceCode").value=localStorage.getItem("lostark-last-workspace")||"";$("nicknameInput").value=localStorage.getItem("lostark-last-nickname")||"";if(localStorage.getItem("lostark-theme")==="dark"){document.body.classList.add("dark");$("themeBtn").textContent="라이트모드"}initGemCalculator()}function toggleTheme(){document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");localStorage.setItem("lostark-theme",d?"dark":"light");$("themeBtn").textContent=d?"라이트모드":"다크모드"}function switchTab(id){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===id));document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===id));if(id==="gemcalc")initGemCalculator()}async function connect(){const code=$("workspaceCode").value.trim(),nickname=$("nicknameInput").value.trim();if(!code||!nickname){alert("길드 이름과 호칭을 입력하세요.");return}localStorage.setItem("lostark-last-workspace",code);localStorage.setItem("lostark-last-nickname",nickname);let {data:ws,error}=await sb.from("v6_workspaces").select("*").eq("code",code).maybeSingle();if(error){alert(error.message);return}if(!ws){let c=await sb.from("v6_workspaces").insert({code,name:code}).select("*").single();if(c.error){alert(c.error.message);return}ws=c.data;await insertDefaultRaids(ws.id)}workspace=ws;await ensureWeeklyReset();let {data:m,error:mErr}=await sb.from("v6_members").select("*").eq("workspace_id",workspace.id).eq("nickname",nickname).maybeSingle();if(mErr){alert(mErr.message);return}if(!m){let cm=await sb.from("v6_members").insert({workspace_id:workspace.id,nickname}).select("*").single();if(cm.error){alert(cm.error.message);return}m=cm.data}currentMember=m;$("addCharBtn").disabled=false;$("addRaidBtn").disabled=false;$("addPartyBtn").disabled=false;if($("refreshAllBtn"))$("refreshAllBtn").disabled=false;$("myInfo").textContent=`${nickname} 님의 원정대`;await loadAll();subscribeRealtime();startScheduledRefreshWatcher()}async function ensureWeeklyReset(){const key=getResetKeyKST();let {data}=await sb.from("v6_weekly_resets").select("*").eq("workspace_id",workspace.id).eq("reset_key",key).maybeSingle();if(data)return;let ins=await sb.from("v6_weekly_resets").insert({workspace_id:workspace.id,reset_key:key});if(!ins.error){await sb.from("v6_raid_clears").delete().eq("workspace_id",workspace.id)}}function getResetKeyKST(){const now=new Date(),kst=new Date(now.getTime()+9*3600*1000);const day=kst.getUTCDay();let diff=(day-3+7)%7;let reset=new Date(Date.UTC(kst.getUTCFullYear(),kst.getUTCMonth(),kst.getUTCDate()-diff,6,0,0));if(kst<reset)reset=new Date(reset.getTime()-7*86400000);return reset.toISOString().slice(0,10)}async function insertDefaultRaids(id){await sb.from("v6_raids").insert([{workspace_id:id,name:"카제로스 4막 하드",short_name:"4하",min_level:1700,max_level:9999,party_size:8,sort_order:10},{workspace_id:id,name:"카제로스 4막 노말",short_name:"4노",min_level:1680,max_level:9999,party_size:8,sort_order:20},{workspace_id:id,name:"종막 노말",short_name:"종노",min_level:1660,max_level:9999,party_size:8,sort_order:30},{workspace_id:id,name:"에기르 하드",short_name:"에하",min_level:1680,max_level:9999,party_size:8,sort_order:40},{workspace_id:id,name:"베히모스",short_name:"베히",min_level:1640,max_level:9999,party_size:8,sort_order:50}])}async function loadAll(){const [c,r,pt,p,cl,gs]=await Promise.all([sb.from("v6_characters").select("*, member:v6_members(*)").eq("workspace_id",workspace.id).order("item_level",{ascending:false}),sb.from("v6_raids").select("*").eq("workspace_id",workspace.id).order("sort_order",{ascending:true}),sb.from("v6_raid_parties").select("*").eq("workspace_id",workspace.id).order("party_no",{ascending:true}),sb.from("v6_raid_placements").select("*").eq("workspace_id",workspace.id),sb.from("v6_raid_clears").select("*").eq("workspace_id",workspace.id),sb.from("v6_global_settings").select("*").eq("key","home_notice").maybeSingle()]);if(c.error||r.error||pt.error||p.error||cl.error){alert((c.error||r.error||pt.error||p.error||cl.error).message);return}characters=c.data||[];raids=r.data||[];parties=pt.data||[];placements=p.data||[];clears=cl.data||[];globalNotice=gs.data?.value||"";globalNoticeAuthorId=gs.data?.author_member_id||null;globalNoticeAuthorName=gs.data?.author_name||"";globalNoticeUpdatedAt=gs.data?.updated_at||"";if(selectedRaid)selectedRaid=raids.find(x=>x.id===selectedRaid.id)||null;render()}function subscribeRealtime(){if(channel)sb.removeChannel(channel);channel=sb.channel("v5-"+workspace.id).on("postgres_changes",{event:"*",schema:"public",table:"v6_characters",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raids",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_parties",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_placements",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_clears",filter:`workspace_id=eq.${workspace.id}`},loadAll).subscribe()}function render(){renderRaidSelector();renderMyCharacters();renderBoard();renderEligible();renderRaidManagement();renderMembers()}function eligible(ch,raid){let lv=Number(ch.item_level||0);return raid&&lv>=Number(raid.min_level||0)&&lv<Number(raid.max_level||99999)}function partyCleared(pid){return clears.some(c=>c.party_id===pid&&c.is_clear)}function charById(id){return characters.find(c=>c.id===id)}function placeAt(pid,slot){return placements.find(p=>p.party_id===pid&&p.slot_no===slot)}function charAssignmentAll(ch){const out=[];placements.filter(pl=>pl.character_id===ch.id).forEach(pl=>{const pt=parties.find(p=>p.id===pl.party_id);if(!pt)return;const raid=raids.find(r=>r.id===pt.raid_id);if(!raid)return;out.push({text:`${raid.short_name||raid.name}-${pt.party_no}파티`,done:partyCleared(pt.id),raid_id:raid.id,party_id:pt.id})});out.sort((a,b)=>Number(a.done)-Number(b.done)||String(a.text).localeCompare(String(b.text),'ko'));return out}function charAssignment(ch){return charAssignmentAll(ch).find(a=>a.raid_id===(selectedRaid&&selectedRaid.id))||null}function jumpToParty(raidId,partyId){const r=raids.find(x=>x.id===raidId);if(r){selectedRaid=r;render();setTimeout(()=>{const el=document.getElementById("party-"+partyId);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),2400)}},80)}}function placedInSelectedRaid(chId){if(!selectedRaid)return false;const rps=parties.filter(p=>p.raid_id===selectedRaid.id).map(p=>p.id);return placements.some(pl=>pl.character_id===chId&&rps.includes(pl.party_id))}function renderRaidSelector(){
+function isMobileMode(){return window.matchMedia&&window.matchMedia("(max-width:760px)").matches}function selectCharacterForMobile(id){selectCharacterForPlacement(id)}function init(){sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.tab));$("connectBtn").onclick=connect;$("addCharBtn").onclick=()=>openCharModal();$("addRaidBtn").onclick=()=>openRaidModal();$("saveCharBtn").onclick=saveCharacter;$("deleteCharBtn").onclick=deleteCharacterCurrent;$("saveRaidBtn").onclick=saveRaid;$("lookupBtn").onclick=lookupCharacterMock;$("addPartyBtn").onclick=addParty;if($("aiArrangeBtn"))$("aiArrangeBtn").onclick=openAiArrangeModal;if($("runAiArrangeBtn"))$("runAiArrangeBtn").onclick=runAiArrange;if($("refreshAllBtn"))$("refreshAllBtn").onclick=()=>refreshAllCharacters(true);$("themeBtn").onclick=toggleTheme;setTimeout(()=>{const bg=$("boundGold"),abg=$("allBoundGold");if(bg&&abg){bg.onchange=()=>{if(bg.checked)abg.checked=false};abg.onchange=()=>{if(abg.checked)bg.checked=false}}},0);$("workspaceCode").value=localStorage.getItem("lostark-last-workspace")||"";$("nicknameInput").value=localStorage.getItem("lostark-last-nickname")||"";if(localStorage.getItem("lostark-theme")==="dark"){document.body.classList.add("dark");$("themeBtn").textContent="라이트모드"}initGemCalculator()}function toggleTheme(){document.body.classList.toggle("dark");const d=document.body.classList.contains("dark");localStorage.setItem("lostark-theme",d?"dark":"light");$("themeBtn").textContent=d?"라이트모드":"다크모드"}function switchTab(id){document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===id));document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active",s.id===id));if(id==="gemcalc")initGemCalculator()}async function connect(){const code=$("workspaceCode").value.trim(),nickname=$("nicknameInput").value.trim();if(!code||!nickname){alert("길드 이름과 호칭을 입력하세요.");return}localStorage.setItem("lostark-last-workspace",code);localStorage.setItem("lostark-last-nickname",nickname);let {data:ws,error}=await sb.from("v6_workspaces").select("*").eq("code",code).maybeSingle();if(error){alert(error.message);return}if(!ws){let c=await sb.from("v6_workspaces").insert({code,name:code}).select("*").single();if(c.error){alert(c.error.message);return}ws=c.data;await insertDefaultRaids(ws.id)}workspace=ws;await ensureWeeklyReset();let {data:m,error:mErr}=await sb.from("v6_members").select("*").eq("workspace_id",workspace.id).eq("nickname",nickname).maybeSingle();if(mErr){alert(mErr.message);return}if(!m){let cm=await sb.from("v6_members").insert({workspace_id:workspace.id,nickname}).select("*").single();if(cm.error){alert(cm.error.message);return}m=cm.data}currentMember=m;$("addCharBtn").disabled=false;$("addRaidBtn").disabled=false;$("addPartyBtn").disabled=false;if($("aiArrangeBtn"))$("aiArrangeBtn").disabled=false;if($("refreshAllBtn"))$("refreshAllBtn").disabled=false;$("myInfo").textContent=`${nickname} 님의 원정대`;await loadAll();subscribeRealtime();startScheduledRefreshWatcher()}async function ensureWeeklyReset(){const key=getResetKeyKST();let {data}=await sb.from("v6_weekly_resets").select("*").eq("workspace_id",workspace.id).eq("reset_key",key).maybeSingle();if(data)return;let ins=await sb.from("v6_weekly_resets").insert({workspace_id:workspace.id,reset_key:key});if(!ins.error){await sb.from("v6_raid_clears").delete().eq("workspace_id",workspace.id)}}function getResetKeyKST(){const now=new Date(),kst=new Date(now.getTime()+9*3600*1000);const day=kst.getUTCDay();let diff=(day-3+7)%7;let reset=new Date(Date.UTC(kst.getUTCFullYear(),kst.getUTCMonth(),kst.getUTCDate()-diff,6,0,0));if(kst<reset)reset=new Date(reset.getTime()-7*86400000);return reset.toISOString().slice(0,10)}async function insertDefaultRaids(id){await sb.from("v6_raids").insert([{workspace_id:id,name:"카제로스 4막 하드",short_name:"4하",min_level:1700,max_level:9999,party_size:8,sort_order:10},{workspace_id:id,name:"카제로스 4막 노말",short_name:"4노",min_level:1680,max_level:9999,party_size:8,sort_order:20},{workspace_id:id,name:"종막 노말",short_name:"종노",min_level:1660,max_level:9999,party_size:8,sort_order:30},{workspace_id:id,name:"에기르 하드",short_name:"에하",min_level:1680,max_level:9999,party_size:8,sort_order:40},{workspace_id:id,name:"베히모스",short_name:"베히",min_level:1640,max_level:9999,party_size:8,sort_order:50}])}async function loadAll(){const [c,r,pt,p,cl,gs]=await Promise.all([sb.from("v6_characters").select("*, member:v6_members(*)").eq("workspace_id",workspace.id).order("item_level",{ascending:false}),sb.from("v6_raids").select("*").eq("workspace_id",workspace.id).order("sort_order",{ascending:true}),sb.from("v6_raid_parties").select("*").eq("workspace_id",workspace.id).order("party_no",{ascending:true}),sb.from("v6_raid_placements").select("*").eq("workspace_id",workspace.id),sb.from("v6_raid_clears").select("*").eq("workspace_id",workspace.id),sb.from("v6_global_settings").select("*").eq("key","home_notice").maybeSingle()]);if(c.error||r.error||pt.error||p.error||cl.error){alert((c.error||r.error||pt.error||p.error||cl.error).message);return}characters=c.data||[];raids=r.data||[];parties=pt.data||[];placements=p.data||[];clears=cl.data||[];globalNotice=gs.data?.value||"";globalNoticeAuthorId=gs.data?.author_member_id||null;globalNoticeAuthorName=gs.data?.author_name||"";globalNoticeUpdatedAt=gs.data?.updated_at||"";if(selectedRaid)selectedRaid=raids.find(x=>x.id===selectedRaid.id)||null;render()}function subscribeRealtime(){if(channel)sb.removeChannel(channel);channel=sb.channel("v5-"+workspace.id).on("postgres_changes",{event:"*",schema:"public",table:"v6_characters",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raids",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_parties",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_placements",filter:`workspace_id=eq.${workspace.id}`},loadAll).on("postgres_changes",{event:"*",schema:"public",table:"v6_raid_clears",filter:`workspace_id=eq.${workspace.id}`},loadAll).subscribe()}function render(){renderRaidSelector();renderMyCharacters();renderBoard();renderEligible();renderRaidManagement();renderMembers()}function eligible(ch,raid){let lv=Number(ch.item_level||0);return raid&&lv>=Number(raid.min_level||0)&&lv<Number(raid.max_level||99999)}function partyCleared(pid){return clears.some(c=>c.party_id===pid&&c.is_clear)}function charById(id){return characters.find(c=>c.id===id)}function placeAt(pid,slot){return placements.find(p=>p.party_id===pid&&p.slot_no===slot)}function charAssignmentAll(ch){const out=[];placements.filter(pl=>pl.character_id===ch.id).forEach(pl=>{const pt=parties.find(p=>p.id===pl.party_id);if(!pt)return;const raid=raids.find(r=>r.id===pt.raid_id);if(!raid)return;out.push({text:`${raid.short_name||raid.name}-${pt.party_no}파티`,done:partyCleared(pt.id),raid_id:raid.id,party_id:pt.id})});out.sort((a,b)=>Number(a.done)-Number(b.done)||String(a.text).localeCompare(String(b.text),'ko'));return out}function charAssignment(ch){return charAssignmentAll(ch).find(a=>a.raid_id===(selectedRaid&&selectedRaid.id))||null}function jumpToParty(raidId,partyId){const r=raids.find(x=>x.id===raidId);if(r){selectedRaid=r;render();setTimeout(()=>{const el=document.getElementById("party-"+partyId);if(el){el.scrollIntoView({behavior:"smooth",block:"center"});el.classList.add("flash");setTimeout(()=>el.classList.remove("flash"),2400)}},80)}}function placedInSelectedRaid(chId){if(!selectedRaid)return false;const rps=parties.filter(p=>p.raid_id===selectedRaid.id).map(p=>p.id);return placements.some(pl=>pl.character_id===chId&&rps.includes(pl.party_id))}function renderRaidSelector(){
 const box=$("raidSelector");box.innerHTML="";
 let home=document.createElement("div");
 home.className="raid-card home-card "+(!selectedRaid?"active":"");
@@ -458,6 +473,7 @@ mine.forEach(ch=>{
 }function renderBoard(){
 const board=$("raidBoard");board.innerHTML="";
 $("addPartyBtn").disabled=!selectedRaid;
+if($("aiArrangeBtn"))$("aiArrangeBtn").disabled=!selectedRaid;
 if(!selectedRaid){
   $("selectedRaidText").textContent="홈 · 공지와 전체 원정대 현황";
   board.className="board";
@@ -472,7 +488,189 @@ board.innerHTML=raidGoldSummaryHtml(selectedRaid);
 const rps=parties.filter(p=>p.raid_id===selectedRaid.id).sort((a,b)=>Number(partyCleared(a.id))-Number(partyCleared(b.id))||a.party_no-b.party_no);
 if(!rps.length){board.innerHTML+= '<div class="empty">생성된 파티가 없습니다. + 파티 추가를 눌러주세요.</div>';return}
 rps.forEach(pt=>{const done=partyCleared(pt.id);let pd=document.createElement("div");pd.id="party-"+pt.id;pd.className="party "+(done?"done":"");pd.innerHTML=`<h3><span>${pt.party_no}파티 ${done?"✅":""}</span><span class="row"><button class="ghost" onclick="clearPartyMembers('${pt.id}')">비우기</button><button class="${done?'secondary':'good'}" onclick="togglePartyClear('${pt.id}', ${!done})">${done?'완료취소':'완료'}</button><button class="danger" onclick="deleteParty('${pt.id}')">삭제</button></span></h3>`;let slots=document.createElement("div");slots.className=`slots size-${size>=16?16:size<=4?4:8}`;for(let slot=1;slot<=size;slot++){let p=placeAt(pt.id,slot),ch=p?charById(p.character_id):null;let sd=document.createElement("div");sd.className="slot "+(ch?`filled ${cardType(ch)}`:"");sd.ondragover=e=>{e.preventDefault();sd.classList.add("dragover")};sd.ondragleave=()=>sd.classList.remove("dragover");sd.ondrop=e=>{e.preventDefault();sd.classList.remove("dragover");dropCharacter(e.dataTransfer.getData("text/plain"),pt.id,slot,p,e.dataTransfer.getData("text/source-placement-id"))};if(ch){sd.draggable=true;sd.ondragstart=e=>{e.dataTransfer.setData("text/plain",ch.id);e.dataTransfer.setData("text/source-placement-id",p?p.id:"");e.dataTransfer.effectAllowed="move";};sd.ondblclick=()=>removePlacement(p);sd.title="드래그로 자리 이동·교환 / 더블클릭으로 배치 해제";}sd.onclick=()=>{if(p)return;const pick=selectedPlacementCharacter();if(pick){dropCharacter(pick,pt.id,slot,null)}};sd.innerHTML=ch?`<div>${characterHtml(ch,false)}</div>`:`${pt.party_no}-${slot}<br>드래그`;slots.appendChild(sd)}pd.appendChild(slots);board.appendChild(pd)})
-}async function addParty(){if(!selectedRaid)return;const rps=parties.filter(p=>p.raid_id===selectedRaid.id);const next=rps.length?Math.max(...rps.map(p=>p.party_no))+1:1;const {error}=await sb.from("v6_raid_parties").insert({workspace_id:workspace.id,raid_id:selectedRaid.id,party_no:next});if(error)alert(error.message);await loadAll()}async function clearPartyMembers(id){
+}async function addParty(){if(!selectedRaid)return;const rps=parties.filter(p=>p.raid_id===selectedRaid.id);const next=rps.length?Math.max(...rps.map(p=>p.party_no))+1:1;const {error}=await sb.from("v6_raid_parties").insert({workspace_id:workspace.id,raid_id:selectedRaid.id,party_no:next});if(error)alert(error.message);await loadAll()}
+function aiSetProgress(p,msg=""){
+  const n=Math.max(0,Math.min(100,Math.round(p)));
+  if($("aiProgressBar"))$("aiProgressBar").style.width=n+"%";
+  if($("aiProgressText"))$("aiProgressText").textContent=n+"%"+(msg?` · ${msg}`:"");
+}
+function aiPowerOf(ch,overrides){
+  const raw=overrides&&overrides[ch.id];
+  return raw!==undefined&&raw!==null&&raw!==""?Number(raw)||0:combatPowerValue(ch);
+}
+function aiMemberKey(ch){return String(ch.member_id||ch.member?.id||ch.member?.nickname||ch.name)}
+function aiIsSupport(ch){return cardType(ch)==="support"}
+function aiCurrentBoardCharacters(){
+  if(!selectedRaid)return [];
+  const selectedPartyIds=parties.filter(p=>p.raid_id===selectedRaid.id).map(p=>p.id);
+  const ids=[...new Set(placements.filter(p=>selectedPartyIds.includes(p.party_id)).map(p=>p.character_id))];
+  return ids.map(id=>charById(id)).filter(Boolean);
+}
+function openAiArrangeModal(){
+  if(!selectedRaid){alert("먼저 레이드를 선택하세요.");return}
+  const list=aiCurrentBoardCharacters().sort((a,b)=>combatPowerValue(b)-combatPowerValue(a)||String(a.name).localeCompare(String(b.name),'ko'));
+  $("aiKnightPower").value=localStorage.getItem(`lostark-ai-knight-${selectedRaid.id}`)||"";
+  $("aiExceptionList").innerHTML='<div class="empty">검색해서 예외 전투력을 적용할 캐릭터를 추가하세요.</div>';
+  $("aiExceptionResults").innerHTML="";
+  $("aiExceptionSearch").value="";
+  $("aiExceptionSearch").oninput=renderAiExceptionResults;
+  $("aiExceptionSearch").onfocus=renderAiExceptionResults;
+  $("aiArrangeSummary").textContent=`${selectedRaid.name} 배치판 캐릭터 ${list.length}명 기준으로 재배치합니다.`;
+  aiSetProgress(0);
+  openModal("aiArrangeModal");
+}
+function aiExceptionSelectedIds(){
+  return new Set([...document.querySelectorAll(".ai-power-override")].map(input=>input.dataset.charId));
+}
+function renderAiExceptionResults(){
+  const box=$("aiExceptionResults");
+  const q=String($("aiExceptionSearch")?.value||"").trim().toLowerCase();
+  const selected=aiExceptionSelectedIds();
+  const list=aiCurrentBoardCharacters()
+    .filter(ch=>!selected.has(ch.id))
+    .filter(ch=>!q||String(ch.name||"").toLowerCase().includes(q)||String(ch.member?.nickname||"").toLowerCase().includes(q))
+    .slice(0,8);
+  box.innerHTML=list.map(ch=>`<div class="ai-result-row"><div><b>${esc(ch.name)}</b><div class="meta">${esc(ch.class_name||"-")} · 실제 ${combatPowerValue(ch).toLocaleString()} · ${esc(ch.member?.nickname||"-")}</div></div><button type="button" class="secondary" onclick="aiAddException('${ch.id}')">추가</button></div>`).join("")||'<div class="empty">검색 결과가 없습니다.</div>';
+}
+function aiAddException(id){
+  const ch=charById(id);
+  if(!ch)return;
+  const list=$("aiExceptionList");
+  if(list.querySelector(".empty"))list.innerHTML="";
+  if(list.querySelector(`[data-char-id="${id}"]`))return;
+  const row=document.createElement("div");
+  row.className="ai-exception-row has-remove";
+  row.innerHTML=`<div><b>${esc(ch.name)}</b><div class="meta">${esc(ch.class_name||"-")} · 실제 ${combatPowerValue(ch).toLocaleString()} · ${esc(ch.member?.nickname||"-")}</div></div><input class="ai-power-override" data-char-id="${ch.id}" type="number" min="0" placeholder="예외 전투력"/><button type="button" class="danger" onclick="aiRemoveException(this)">삭제</button>`;
+  list.appendChild(row);
+  $("aiExceptionSearch").value="";
+  $("aiExceptionResults").innerHTML="";
+}
+function aiRemoveException(btn){
+  btn.closest(".ai-exception-row")?.remove();
+  if(!$("aiExceptionList").querySelector(".ai-exception-row"))$("aiExceptionList").innerHTML='<div class="empty">검색해서 예외 전투력을 적용할 캐릭터를 추가하세요.</div>';
+}
+function aiReadOverrides(){
+  const out={};
+  document.querySelectorAll(".ai-power-override").forEach(input=>{
+    const value=String(input.value||"").trim();
+    if(value!=="")out[input.dataset.charId]=Number(value)||0;
+  });
+  return out;
+}
+function aiPartyScore(groups,overrides){
+  if(!groups.length)return 999999999;
+  const sums=groups.map(g=>g.reduce((sum,ch)=>sum+aiPowerOf(ch,overrides),0));
+  const avg=sums.reduce((a,b)=>a+b,0)/sums.length;
+  const spread=Math.max(...sums)-Math.min(...sums);
+  const variance=sums.reduce((sum,v)=>sum+Math.pow(v-avg,2),0)/sums.length;
+  return spread+Math.sqrt(variance);
+}
+function aiJobKey(ch){return `${String(ch.class_name||"").trim()}|${cardType(ch)}`}
+function aiCanJoinParty(group,ch){
+  return !group.some(m=>aiMemberKey(m)===aiMemberKey(ch))&&!group.some(m=>aiJobKey(m)===aiJobKey(ch));
+}
+function aiTryBuild(pool,partyCount,partySize,knightPower,overrides){
+  const supports=pool.filter(aiIsSupport).sort((a,b)=>aiPowerOf(b,overrides)-aiPowerOf(a,overrides));
+  const dealers=pool.filter(ch=>!aiIsSupport(ch)).sort((a,b)=>aiPowerOf(b,overrides)-aiPowerOf(a,overrides));
+  if(supports.length<partyCount)return null;
+  const groups=Array.from({length:partyCount},()=>[]);
+  const used=new Set();
+  for(let i=0;i<partyCount;i++){groups[i].push(supports[i]);used.add(supports[i].id)}
+  let remain=[...dealers,...supports.slice(partyCount)].filter(ch=>!used.has(ch.id)).sort((a,b)=>aiPowerOf(b,overrides)-aiPowerOf(a,overrides));
+  if(knightPower){
+    for(let i=0;i<partyCount;i++){
+      if(groups[i].some(ch=>aiPowerOf(ch,overrides)>=knightPower))continue;
+      const pick=remain.find(ch=>aiPowerOf(ch,overrides)>=knightPower&&aiCanJoinParty(groups[i],ch));
+      if(!pick)return null;
+      groups[i].push(pick);used.add(pick.id);remain=remain.filter(ch=>ch.id!==pick.id);
+    }
+  }
+  const targetCount=Math.min(pool.length,partyCount*partySize);
+  let changed=true;
+  while(changed&&groups.reduce((sum,g)=>sum+g.length,0)<targetCount){
+    changed=false;
+    remain.sort((a,b)=>aiPowerOf(b,overrides)-aiPowerOf(a,overrides));
+    for(const ch of [...remain]){
+      const candidates=groups
+        .map((g,i)=>({g,i,sum:g.reduce((s,x)=>s+aiPowerOf(x,overrides),0)}))
+        .filter(x=>x.g.length<partySize&&aiCanJoinParty(x.g,ch))
+        .sort((a,b)=>a.sum-b.sum||a.g.length-b.g.length);
+      if(!candidates.length)continue;
+      candidates[0].g.push(ch);used.add(ch.id);remain=remain.filter(x=>x.id!==ch.id);changed=true;
+      if(groups.reduce((sum,g)=>sum+g.length,0)>=targetCount)break;
+    }
+  }
+  const valid=groups.every(g=>{
+    const jobKeys=g.map(aiJobKey);
+    return g.length&&g.length<=partySize&&g.some(aiIsSupport)&&(!knightPower||g.some(ch=>aiPowerOf(ch,overrides)>=knightPower))&&new Set(jobKeys).size===jobKeys.length;
+  });
+  if(!valid)return null;
+  const placed=groups.reduce((sum,g)=>sum+g.length,0);
+  return {groups,placed,score:aiPartyScore(groups,overrides),leftOut:pool.filter(ch=>!used.has(ch.id))};
+}
+function aiBuildArrangement(pool,partySize,knightPower,overrides){
+  if(!pool.length)return null;
+  const maxParties=Math.min(pool.filter(aiIsSupport).length,pool.length);
+  let best=null;
+  for(let partyCount=1;partyCount<=maxParties;partyCount++){
+    const attempt=aiTryBuild(pool,partyCount,partySize,knightPower,overrides);
+    if(!attempt)continue;
+    if(!best||attempt.placed>best.placed||(attempt.placed===best.placed&&partyCount<best.groups.length)||(attempt.placed===best.placed&&partyCount===best.groups.length&&attempt.score<best.score))best=attempt;
+  }
+  return best;
+}
+async function aiEnsureParties(count){
+  let rps=parties.filter(p=>p.raid_id===selectedRaid.id).sort((a,b)=>a.party_no-b.party_no);
+  let next=rps.length?Math.max(...rps.map(p=>p.party_no))+1:1;
+  while(rps.length<count){
+    const res=await sb.from("v6_raid_parties").insert({workspace_id:workspace.id,raid_id:selectedRaid.id,party_no:next}).select("*").single();
+    if(res.error)throw res.error;
+    rps.push(res.data);next++;
+  }
+  return rps.slice(0,count);
+}
+async function runAiArrange(){
+  if(!selectedRaid||!workspace){aiSetProgress(0,"레이드 선택 필요");return}
+  const btn=$("runAiArrangeBtn");
+  const knightPower=Number($("aiKnightPower").value||0)||0;
+  localStorage.setItem(`lostark-ai-knight-${selectedRaid.id}`,$("aiKnightPower").value||"");
+  const overrides=aiReadOverrides();
+  const pool=aiCurrentBoardCharacters();
+  if(!pool.length){aiSetProgress(0,"배치판 캐릭터 없음");return}
+  const partySize=Number(selectedRaid.party_size||8);
+  aiSetProgress(8,"계산 중");
+  await sleep(80);
+  const plan=aiBuildArrangement(pool,partySize,knightPower,overrides);
+  if(!plan||!plan.groups.length){aiSetProgress(100,"배치 불가");return}
+  const placedIds=new Set(plan.groups.flat().map(ch=>ch.id));
+  try{
+    if(btn){btn.disabled=true;btn.textContent="배치 중..."}
+    aiSetProgress(22,"파티 준비");
+    const targetParties=await aiEnsureParties(plan.groups.length);
+    aiSetProgress(42,"기존 배치 정리");
+    const currentRaidParties=parties.filter(p=>p.raid_id===selectedRaid.id);
+    const selectedPartyIds=currentRaidParties.map(p=>p.id).concat(targetParties.map(p=>p.id));
+    if(selectedPartyIds.length)await sb.from("v6_raid_placements").delete().in("party_id",[...new Set(selectedPartyIds)]);
+    aiSetProgress(58,"배치 저장");
+    const rows=[];
+    plan.groups.forEach((group,idx)=>group.forEach((ch,slotIdx)=>rows.push({workspace_id:workspace.id,party_id:targetParties[idx].id,character_id:ch.id,slot_no:slotIdx+1})));
+    if(rows.length){
+      const res=await sb.from("v6_raid_placements").insert(rows);
+      if(res.error)throw res.error;
+    }
+    aiSetProgress(86,"화면 갱신");
+    await loadAll();
+    aiSetProgress(100,"완료");
+    setTimeout(()=>closeModal("aiArrangeModal"),350);
+    alert("배치 완료되었습니다");
+  }catch(err){
+    console.error(err);
+    aiSetProgress(100,"오류");
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent="배치 시작"}
+  }
+}
+async function clearPartyMembers(id){
 if(!confirm("이 파티의 배치 인원을 모두 비울까요? 완료 상태도 미완료로 변경됩니다."))return;
 await sb.from("v6_raid_placements").delete().eq("party_id",id);
 await sb.from("v6_raid_clears").delete().eq("party_id",id);
@@ -481,6 +679,7 @@ await loadAll()
 const ch=charById(chId);
 if(!ch||!selectedRaid)return;
 
+const selectedRaidPartyIds=parties.filter(p=>p.raid_id===selectedRaid.id).map(p=>p.id);
 const sourcePlacement=sourcePlacementId?placements.find(p=>p.id===sourcePlacementId):null;
 if(sourcePlacement){
   if(existing?.id===sourcePlacement.id)return;
@@ -516,7 +715,6 @@ if(existing){
   await sb.from("v6_raid_placements").delete().eq("id",existing.id);
 }
 
-const selectedRaidPartyIds=parties.filter(p=>p.raid_id===selectedRaid.id).map(p=>p.id);
 const prevs=placements.filter(p=>p.character_id===chId&&selectedRaidPartyIds.includes(p.party_id));
 for(const prev of prevs){
   if(!existing || prev.id!==existing.id){
