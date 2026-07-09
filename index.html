@@ -569,14 +569,20 @@ function aiJobKey(ch){return `${String(ch.class_name||"").trim()}|${cardType(ch)
 function aiCanJoinParty(group,ch){
   return !group.some(m=>aiMemberKey(m)===aiMemberKey(ch))&&!group.some(m=>aiJobKey(m)===aiJobKey(ch));
 }
+function aiPartyCapacity(group,partySize){
+  if(group.some(aiIsSupport))return partySize;
+  if(partySize>=16)return 12;
+  if(partySize>=8)return 6;
+  return Math.min(3,partySize);
+}
 function aiTryBuild(pool,partyCount,partySize,knightPower,overrides){
   const supports=pool.filter(aiIsSupport).sort((a,b)=>aiPowerOf(b,overrides)-aiPowerOf(a,overrides));
   const dealers=pool.filter(ch=>!aiIsSupport(ch)).sort((a,b)=>aiPowerOf(b,overrides)-aiPowerOf(a,overrides));
-  if(supports.length<partyCount)return null;
   const groups=Array.from({length:partyCount},()=>[]);
   const used=new Set();
-  for(let i=0;i<partyCount;i++){groups[i].push(supports[i]);used.add(supports[i].id)}
-  let remain=[...dealers,...supports.slice(partyCount)].filter(ch=>!used.has(ch.id)).sort((a,b)=>aiPowerOf(b,overrides)-aiPowerOf(a,overrides));
+  const supportPartyCount=Math.min(supports.length,partyCount);
+  for(let i=0;i<supportPartyCount;i++){groups[i].push(supports[i]);used.add(supports[i].id)}
+  let remain=[...dealers,...supports.slice(supportPartyCount)].filter(ch=>!used.has(ch.id)).sort((a,b)=>aiPowerOf(b,overrides)-aiPowerOf(a,overrides));
   if(knightPower){
     for(let i=0;i<partyCount;i++){
       if(groups[i].some(ch=>aiPowerOf(ch,overrides)>=knightPower))continue;
@@ -585,7 +591,7 @@ function aiTryBuild(pool,partyCount,partySize,knightPower,overrides){
       groups[i].push(pick);used.add(pick.id);remain=remain.filter(ch=>ch.id!==pick.id);
     }
   }
-  const targetCount=Math.min(pool.length,partyCount*partySize);
+  const targetCount=Math.min(pool.length,groups.reduce((sum,g)=>sum+aiPartyCapacity(g,partySize),0));
   let changed=true;
   while(changed&&groups.reduce((sum,g)=>sum+g.length,0)<targetCount){
     changed=false;
@@ -593,7 +599,7 @@ function aiTryBuild(pool,partyCount,partySize,knightPower,overrides){
     for(const ch of [...remain]){
       const candidates=groups
         .map((g,i)=>({g,i,sum:g.reduce((s,x)=>s+aiPowerOf(x,overrides),0)}))
-        .filter(x=>x.g.length<partySize&&aiCanJoinParty(x.g,ch))
+        .filter(x=>x.g.length<aiPartyCapacity(x.g,partySize)&&aiCanJoinParty(x.g,ch))
         .sort((a,b)=>a.sum-b.sum||a.g.length-b.g.length);
       if(!candidates.length)continue;
       candidates[0].g.push(ch);used.add(ch.id);remain=remain.filter(x=>x.id!==ch.id);changed=true;
@@ -602,7 +608,7 @@ function aiTryBuild(pool,partyCount,partySize,knightPower,overrides){
   }
   const valid=groups.every(g=>{
     const jobKeys=g.map(aiJobKey);
-    return g.length&&g.length<=partySize&&g.some(aiIsSupport)&&(!knightPower||g.some(ch=>aiPowerOf(ch,overrides)>=knightPower))&&new Set(jobKeys).size===jobKeys.length;
+    return g.length&&g.length<=aiPartyCapacity(g,partySize)&&(!knightPower||g.some(ch=>aiPowerOf(ch,overrides)>=knightPower))&&new Set(jobKeys).size===jobKeys.length;
   });
   if(!valid)return null;
   const placed=groups.reduce((sum,g)=>sum+g.length,0);
@@ -610,7 +616,7 @@ function aiTryBuild(pool,partyCount,partySize,knightPower,overrides){
 }
 function aiBuildArrangement(pool,partySize,knightPower,overrides){
   if(!pool.length)return null;
-  const maxParties=Math.min(pool.filter(aiIsSupport).length,pool.length);
+  const maxParties=pool.length;
   let best=null;
   for(let partyCount=1;partyCount<=maxParties;partyCount++){
     const attempt=aiTryBuild(pool,partyCount,partySize,knightPower,overrides);
