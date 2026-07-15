@@ -192,6 +192,9 @@ body.dark .raid-card.home-card{
 .gem-input-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 .gem-item label{display:block;font-size:12px;color:var(--muted);font-weight:900;margin-bottom:5px}
 .gem-item input{text-align:center;width:100%}
+.gem-config{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:end;margin-bottom:12px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.gem-config label{display:grid;gap:5px;font-size:12px;color:var(--muted);font-weight:900}
+.gem-config input{width:100%;text-align:center}
 .gem-option{display:flex;align-items:center;gap:7px;margin:12px 0;font-size:14px;color:var(--text);font-weight:800}
 .gem-option input{width:auto}
 .gem-targets{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:12px}
@@ -204,6 +207,18 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
 .cube-ticket-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .cube-ticket-item label,.cube-reward-editor label{display:block;font-size:12px;color:var(--muted);font-weight:900;margin-bottom:5px}
 .cube-ticket-item input,.cube-reward-editor input,.cube-target-row input,.cube-target-row select{width:100%}
+.cube-ticket-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px;align-items:center}
+.cube-ticket-add{padding:8px 7px;font-size:11px;border-radius:9px;background:var(--panel);color:var(--accent2);border:1px solid var(--line2)}
+.cube-calc-btn{margin-top:14px}
+.cube-adder-popover{position:fixed;z-index:120;width:min(184px,calc(100vw - 16px));max-height:calc(100vh - 16px);overflow:auto;padding:7px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;box-shadow:0 10px 26px rgba(15,23,42,.22)}
+.cube-adder-title{display:block;font-size:11px;margin-bottom:1px;color:var(--text)}
+.cube-adder-summary{margin-bottom:4px;color:var(--muted);font-size:9px;font-weight:800;line-height:1.2}
+.cube-adder-display{width:100%;text-align:right;font-size:16px;font-weight:950;padding:6px 7px;margin-bottom:5px;background:var(--panel2);border-radius:8px}
+.cube-keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.cube-keypad button{min-height:33px;padding:4px;font-size:13px;border-radius:7px;background:var(--panel);color:var(--text);border:1px solid var(--line2)}
+.cube-keypad .cube-key-back{font-size:9px;background:var(--panel2)}
+.cube-adder-actions{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:5px}
+.cube-adder-actions button{padding:6px 4px;font-size:10px;border-radius:7px}
 .cube-result-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:8px;margin-top:12px;align-items:stretch}
 .cube-result-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px;color:var(--text);cursor:pointer}
 .cube-result-card b{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
@@ -239,10 +254,21 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
 @media(max-width:760px){
   .gem-panel{max-width:none}
   .gem-tools-grid{grid-template-columns:1fr}
-  .gem-input-grid{grid-template-columns:1fr}
+  .gem-input-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .gem-targets{grid-template-columns:repeat(3,minmax(0,1fr))}
   .cube-ticket-grid,.cube-result-grid,.cube-side-results,.cube-reward-editor,.cube-target-row{grid-template-columns:1fr}
   .ai-exception-row{grid-template-columns:1fr}
+  #myCharacterList{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+  #eligibleList{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:5px!important}
+  #myCharacterList .character,#eligibleList .member{min-width:0;overflow:hidden}
+  #myCharacterList .char-name,#eligibleList .char-name{overflow-wrap:anywhere;word-break:break-word;line-height:1.2}
+  #myCharacterList .char-name{font-size:14px}
+  #myCharacterList .meta{overflow-wrap:anywhere}
+  #myCharacterList .assignment{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+  #eligibleList .member{padding:5px}
+  #eligibleList .char-name{font-size:12px}
+  #eligibleList .meta{font-size:9px;line-height:1.25;overflow-wrap:anywhere}
+  #eligibleList .updated-at{float:none;display:block;margin:2px 0 0;font-size:8px;white-space:normal}
 }
 </style>
 
@@ -254,10 +280,15 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
         <div class="board-head">
           <div>
             <h2>보석상자 계산기</h2>
-            <div class="small">1~5레벨 상자 수량을 입력하고 목표 레벨을 선택하거나, 목표 없이 최대 제작 가능 레벨을 계산합니다.</div>
+            <div class="small">상자 수량을 입력하고 목표 레벨을 선택하거나, 목표 없이 최대 제작 가능 레벨을 계산합니다.</div>
           </div>
+          <button type="button" class="ghost" onclick="toggleGemConfig()">보석설정</button>
         </div>
         <div class="gem-box">
+          <div class="gem-config hidden" id="gemConfigBox">
+            <label>표시할 최고 상자 레벨<input id="gemMaxInputLevel" type="number" min="3" max="20" value="3"></label>
+            <button type="button" class="secondary" onclick="saveGemConfig()">설정 저장</button>
+          </div>
           <div class="gem-input-grid" id="gemBoxInputs"></div>
           <label class="gem-option"><input type="checkbox" id="gemKeepOne" checked> 상자 자리유지</label>
           <div class="gem-target-block">
@@ -275,11 +306,11 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
             <h2>큐브티켓 계산기</h2>
             <div class="small">보유 티켓으로 얻을 수 있는 보상 총합과 목표 달성에 필요한 티켓 사용량을 계산합니다.</div>
           </div>
-          <button type="button" class="ghost" onclick="toggleCubeConfig()">보상 설정</button>
+          <div class="row"><button type="button" class="ghost" onclick="cubeResetCounts()">초기화</button><button type="button" class="ghost" onclick="toggleCubeConfig()">보상 설정</button></div>
         </div>
         <div class="cube-box">
           <div class="cube-ticket-grid" id="cubeTicketInputs"></div>
-          <button class="good gem-calc-btn" type="button" onclick="cubeCalculate()">산출</button>
+          <button class="good gem-calc-btn cube-calc-btn" type="button" onclick="cubeCalculate()">산출</button>
           <div class="cube-result-grid" id="cubeResultGrid"></div>
           <div class="cube-target-row">
             <select id="cubeTargetReward"></select>
@@ -298,7 +329,7 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
       </div>
     </div>
   </div>
-</section></main><div id="charModal" class="modal hidden"><div class="panel"><h2 id="charModalTitle">캐릭터 추가</h2><input id="editingCharId" type="hidden"/><div class="form"><div class="row"><input id="lookupName" placeholder="캐릭터명 입력 후 조회" style="flex:1"><button id="lookupBtn" class="secondary">조회</button></div><div id="lookupPreview" class="preview hidden"></div></div><div class="form two" style="margin-top:8px"><input id="charName" placeholder="캐릭터명"/><input id="charServer" placeholder="서버명"/><input id="charClass" placeholder="클래스명"/><input id="charLevel" type="number" placeholder="아이템 레벨"/><input id="charPower" type="number" placeholder="전투력"/><input id="charMemo" placeholder="메모"/>
+</section></main><div id="cubeAdderPopover" class="cube-adder-popover hidden" onclick="event.stopPropagation()"><b class="cube-adder-title" id="cubeAdderTitle">티켓</b><div class="cube-adder-summary" id="cubeAdderSummary"></div><input id="cubeAdderDisplay" class="cube-adder-display" value="0" readonly><div class="cube-keypad"><button type="button" onclick="cubeAdderPress(1)">1</button><button type="button" onclick="cubeAdderPress(2)">2</button><button type="button" onclick="cubeAdderPress(3)">3</button><button type="button" onclick="cubeAdderPress(4)">4</button><button type="button" onclick="cubeAdderPress(5)">5</button><button type="button" onclick="cubeAdderPress(6)">6</button><button type="button" onclick="cubeAdderPress(7)">7</button><button type="button" onclick="cubeAdderPress(8)">8</button><button type="button" onclick="cubeAdderPress(9)">9</button><button type="button" class="cube-key-back" onclick="cubeAdderClear()">지우기</button><button type="button" onclick="cubeAdderPress(0)">0</button><button type="button" class="cube-key-back" onclick="cubeAdderBackspace()">삭제</button></div><div class="cube-adder-actions"><button type="button" class="ghost" onclick="cubeCloseAdder()">취소</button><button type="button" class="good" onclick="cubeAdderConfirm()">더하기</button></div></div><div id="charModal" class="modal hidden"><div class="panel"><h2 id="charModalTitle">캐릭터 추가</h2><input id="editingCharId" type="hidden"/><div class="form"><div class="row"><input id="lookupName" placeholder="캐릭터명 입력 후 조회" style="flex:1"><button id="lookupBtn" class="secondary">조회</button></div><div id="lookupPreview" class="preview hidden"></div></div><div class="form two" style="margin-top:8px"><input id="charName" placeholder="캐릭터명"/><input id="charServer" placeholder="서버명"/><input id="charClass" placeholder="클래스명"/><input id="charLevel" type="number" placeholder="아이템 레벨"/><input id="charPower" type="number" placeholder="전투력"/><input id="charMemo" placeholder="메모"/>
 <label class="force-dealer-row"><input id="forceDealer" type="checkbox"/> 서포터 클래스지만 딜러로 표시</label></div><div class="footer-actions"><button id="deleteCharBtn" class="danger hidden">삭제</button><button class="ghost" onclick="closeModal('charModal')">취소</button><button id="saveCharBtn">저장</button></div></div></div><div id="raidModal" class="modal hidden"><div class="panel"><h2 id="raidModalTitle">레이드 추가</h2><input id="editingRaidId" type="hidden"/><div class="form two"><input id="raidName" placeholder="레이드명"/><input id="raidShort" placeholder="짧은 이름"/><input id="raidMin" type="number" placeholder="최소 레벨"/><input id="raidMax" type="number" placeholder="최대 레벨(미만)"/><input id="raidPartySize" type="number" placeholder="인원수 4/8/16"/><input id="raidOrder" type="number" placeholder="정렬 순서"/>
 <select id="raidColor" class="raid-color-select">
   <option value="slate">기본 회색</option>
@@ -874,8 +905,8 @@ box.innerHTML=`<div class="member-groups">${Object.entries(grouped).map(([n,list
   return `<div class="member-group">${title}<div class="member-char-grid">${chars}</div></div>`;
 }).join("")}</div>`;
 }function openModal(id){$(id).classList.remove("hidden")}function closeModal(id){$(id).classList.add("hidden")}function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-const GEM_INPUT_MAX_LEVEL=5;
 const GEM_CALC_MAX_LEVEL=20;
+let gemInputMaxLevel=Math.min(GEM_CALC_MAX_LEVEL,Math.max(3,Number(localStorage.getItem("lostark-gem-box-max-level")||3)));
 let gemSelectedTarget=null;
 const CUBE_REWARD_KEYS=[
   {key:"gemPower",name:"보석",unit:"레벨",target:true},
@@ -886,19 +917,16 @@ const CUBE_REWARD_KEYS=[
   {key:"expeditionXp",name:"원정대 경험치",unit:"",target:true}
 ];
 let cubeTickets=[];
+let cubeAdderIndex=-1;
+let cubeAdderValue="";
 
 function initGemCalculator(){
   const boxInputs=$("gemBoxInputs");
   const targetButtons=$("gemTargetButtons");
   if(!boxInputs||!targetButtons||boxInputs.dataset.ready==="1")return;
   boxInputs.dataset.ready="1";
-
-  for(let i=1;i<=GEM_INPUT_MAX_LEVEL;i++){
-    const div=document.createElement("div");
-    div.className="gem-item";
-    div.innerHTML=`<label>${i}레벨 상자</label><input type="number" id="gemBox${i}" min="0" value="0">`;
-    boxInputs.appendChild(div);
-  }
+  renderGemBoxInputs();
+  if($("gemMaxInputLevel"))$("gemMaxInputLevel").value=gemInputMaxLevel;
 
   for(let i=5;i<=10;i++){
     const btn=document.createElement("button");
@@ -909,6 +937,32 @@ function initGemCalculator(){
     targetButtons.appendChild(btn);
   }
   initCubeCalculator();
+}
+
+function renderGemBoxInputs(){
+  const box=$("gemBoxInputs");if(!box)return;
+  const values={};
+  box.querySelectorAll("input[id^='gemBox']").forEach(input=>values[input.id]=input.value);
+  box.innerHTML="";
+  for(let i=1;i<=gemInputMaxLevel;i++){
+    const div=document.createElement("div");
+    div.className="gem-item";
+    div.innerHTML=`<label>${i}레벨 상자</label><input type="number" id="gemBox${i}" min="0" value="${Number(values["gemBox"+i]||0)}">`;
+    box.appendChild(div);
+  }
+}
+
+function toggleGemConfig(){
+  if($("gemMaxInputLevel"))$("gemMaxInputLevel").value=gemInputMaxLevel;
+  $("gemConfigBox")?.classList.toggle("hidden");
+}
+
+function saveGemConfig(){
+  const next=Math.min(GEM_CALC_MAX_LEVEL,Math.max(3,Math.floor(Number($("gemMaxInputLevel")?.value||3))));
+  gemInputMaxLevel=next;
+  localStorage.setItem("lostark-gem-box-max-level",String(next));
+  renderGemBoxInputs();
+  $("gemConfigBox")?.classList.add("hidden");
 }
 
 function gemSelectTarget(level,btn){
@@ -927,7 +981,7 @@ function gemSelectTarget(level,btn){
 function gemGetBoxes(){
   const keepOne=$("gemKeepOne")?.checked;
   const boxes=Array(GEM_CALC_MAX_LEVEL+1).fill(0);
-  for(let i=1;i<=GEM_INPUT_MAX_LEVEL;i++){
+  for(let i=1;i<=gemInputMaxLevel;i++){
     const raw=Number($("gemBox"+i)?.value)||0;
     boxes[i]=keepOne?Math.max(0,raw-1):raw;
   }
@@ -971,7 +1025,7 @@ function gemCalcMax(){
 function gemCalcTarget(target){
   const boxes=gemGetBoxes();
   let totalPower=0;
-  for(let i=1;i<=GEM_INPUT_MAX_LEVEL;i++){
+  for(let i=1;i<=gemInputMaxLevel;i++){
     totalPower+=boxes[i]*Math.pow(3,i-1);
   }
   const needPower=Math.pow(3,target-1);
@@ -981,16 +1035,16 @@ function gemCalcTarget(target){
   }
 
   let need=needPower;
-  const use=Array(GEM_INPUT_MAX_LEVEL+1).fill(0);
+  const use=Array(gemInputMaxLevel+1).fill(0);
 
-  for(let i=GEM_INPUT_MAX_LEVEL;i>=1;i--){
+  for(let i=gemInputMaxLevel;i>=1;i--){
     const value=Math.pow(3,i-1);
     const count=Math.min(boxes[i],Math.floor(need/value));
     use[i]=count;
     need-=count*value;
   }
 
-  for(let i=1;i<=GEM_INPUT_MAX_LEVEL&&need>0;i++){
+  for(let i=1;i<=gemInputMaxLevel&&need>0;i++){
     const value=Math.pow(3,i-1);
     while(use[i]<boxes[i]&&need>0){
       use[i]++;
@@ -999,13 +1053,13 @@ function gemCalcTarget(target){
   }
 
   let text=`${target}레벨 1개 제작 가능\n\n사용할 상자 구성\n`;
-  for(let i=1;i<=GEM_INPUT_MAX_LEVEL;i++){
+  for(let i=1;i<=gemInputMaxLevel;i++){
     if(use[i]>0)text+=`${i}레벨 상자: ${use[i]}개\n`;
   }
 
   text+=`\n계산식\n`;
   const parts=[];
-  for(let i=1;i<=GEM_INPUT_MAX_LEVEL;i++){
+  for(let i=1;i<=gemInputMaxLevel;i++){
     if(use[i]>0)parts.push(`${i}레벨 ${use[i]}개 × ${Math.pow(3,i-1)}`);
   }
   text+=parts.join(" + ");
@@ -1036,6 +1090,15 @@ function cubeLoadTickets(){
 function initCubeCalculator(){
   if($("cubeTicketInputs")?.dataset.ready==="1")return;
   cubeTickets=cubeLoadTickets();
+  if(!document.body.dataset.cubeAdderCloseReady){
+    document.body.dataset.cubeAdderCloseReady="1";
+    document.addEventListener("pointerdown",event=>{
+      const popover=$("cubeAdderPopover");
+      if(popover&&!popover.classList.contains("hidden")&&!popover.contains(event.target)&&!event.target.closest(".cube-ticket-add"))cubeCloseAdder();
+    });
+    window.addEventListener("resize",cubeCloseAdder);
+    window.addEventListener("scroll",cubeCloseAdder,true);
+  }
   renderCubeTicketInputs();
   renderCubeTargets();
   renderCubeConfig();
@@ -1083,7 +1146,72 @@ function cubeFormatValue(key,value){
 function renderCubeTicketInputs(){
   const box=$("cubeTicketInputs");if(!box)return;
   box.dataset.ready="1";
-  box.innerHTML=cubeTickets.map((t,i)=>`<div class="cube-ticket-item"><label>${esc(t.name)}</label><input id="cubeTicket${i}" type="number" min="0" value="${Number(t.count||0)}" onchange="cubeTickets[${i}].count=Number(this.value)||0"></div>`).join("");
+  box.innerHTML=cubeTickets.map((t,i)=>`<div class="cube-ticket-item"><label>${esc(t.name)}</label><div class="cube-ticket-controls"><input id="cubeTicket${i}" type="number" min="0" value="${Number(t.count||0)}" onchange="cubeTickets[${i}].count=Number(this.value)||0"><button type="button" class="cube-ticket-add" onclick="event.stopPropagation();cubeOpenAdder(${i},this)">추가</button></div></div>`).join("");
+}
+
+function cubeOpenAdder(i,button){
+  cubeAdderIndex=i;
+  cubeAdderValue="";
+  const current=Number($("cubeTicket"+i)?.value||0);
+  $("cubeAdderTitle").textContent=cubeTickets[i]?.name||"티켓";
+  $("cubeAdderSummary").textContent=`현재 ${current.toLocaleString()}개`;
+  $("cubeAdderDisplay").value="0";
+  const popover=$("cubeAdderPopover");
+  if(!popover||!button)return;
+  popover.classList.remove("hidden");
+  popover.style.visibility="hidden";
+  popover.style.left="8px";
+  popover.style.top="8px";
+  const rect=button.getBoundingClientRect(),width=popover.offsetWidth||184,height=popover.offsetHeight||240;
+  const left=Math.max(8,Math.min(window.innerWidth-width-8,rect.right-width));
+  let top=rect.bottom+6;
+  if(top+height>window.innerHeight-8)top=Math.max(8,rect.top-height-6);
+  popover.style.left=`${left}px`;
+  popover.style.top=`${top}px`;
+  popover.style.visibility="visible";
+}
+
+function cubeAdderPress(number){
+  if(cubeAdderValue.length>=8)return;
+  cubeAdderValue=(cubeAdderValue+String(number)).replace(/^0+(?=\d)/,"");
+  $("cubeAdderDisplay").value=Number(cubeAdderValue||0).toLocaleString();
+}
+
+function cubeAdderBackspace(){
+  cubeAdderValue=cubeAdderValue.slice(0,-1);
+  $("cubeAdderDisplay").value=Number(cubeAdderValue||0).toLocaleString();
+}
+
+function cubeAdderClear(){
+  cubeAdderValue="";
+  $("cubeAdderDisplay").value="0";
+}
+
+function cubeCloseAdder(){
+  cubeAdderIndex=-1;
+  cubeAdderValue="";
+  const popover=$("cubeAdderPopover");
+  if(popover){popover.classList.add("hidden");popover.style.visibility=""}
+}
+
+function cubeAdderConfirm(){
+  if(cubeAdderIndex<0)return;
+  const input=$("cubeTicket"+cubeAdderIndex);
+  const next=Number(input?.value||0)+Number(cubeAdderValue||0);
+  if(input)input.value=next;
+  if(cubeTickets[cubeAdderIndex])cubeTickets[cubeAdderIndex].count=next;
+  cubeCloseAdder();
+}
+
+function cubeResetCounts(){
+  cubeCloseAdder();
+  cubeTickets.forEach((ticket,i)=>{
+    ticket.count=0;
+    const input=$("cubeTicket"+i);
+    if(input)input.value=0;
+  });
+  cubeCalculate();
+  if($("cubePlanResult"))$("cubePlanResult").textContent="보상을 클릭하거나 목표치를 입력하면 필요한 티켓 사용량을 보여줍니다.";
 }
 
 function renderCubeTargets(){
