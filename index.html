@@ -272,7 +272,28 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
 }
 </style>
 
-</head><body><header><div class="wrap"><div class="top"><div class="title-tabs"><div><h1>로아 레이드 현황판</h1><div class="subtitle">Made by 진황</div></div><div class="tabs"><div class="tab active" data-tab="homework">숙제 관리</div><div class="tab" data-tab="raids">레이드 관리</div><div class="tab" data-tab="members">길드원/캐릭터</div><div class="tab" data-tab="gemcalc">보석 계산기</div></div></div><div class="row"><input id="workspaceCode" placeholder="길드 이름"/><input id="nicknameInput" placeholder="호칭"/><button id="connectBtn">접속</button><button id="themeBtn" class="ghost">다크모드</button></div></div></div></header><main><div class="notice">매주 수요일 오전 6시 이후 자동 초기화</div><section id="homework" class="section active"><div class="layout"><aside class="panel side-sticky"><div class="board-head"><h2>내 원정대</h2><button id="addCharBtn" class="secondary" disabled>캐릭터 추가</button></div><div class="small" id="myInfo">접속 후 표시됩니다.</div><div id="myCharacterList" class="list" style="margin-top:10px"></div></aside><section class="panel"><div class="board-head"><div><h2>레이드 배치판</h2><div id="selectedRaidText" class="small">레이드를 선택하세요.</div></div><div class="row"><button id="undoPlacementBtn" class="ghost" disabled>되돌리기</button><button id="aiArrangeBtn" class="ai-arrange-btn" disabled>AI배치요청</button><button id="addPartyBtn" class="good" disabled>+ 파티 추가</button><button id="refreshAllBtn" class="secondary" disabled>갱신</button></div></div><div class="raid-category-box"><div id="raidSelector" class="raid-select-card"></div></div><div class="board-divider"></div><div id="raidBoard" class="board"></div></section><aside class="panel side-sticky"><h2>레이드 가능 길드원</h2><div id="eligibleInfo" class="small">레이드를 선택하면 표시됩니다.</div><div id="eligibleList" class="list" style="margin-top:10px"></div></aside></div></section><section id="raids" class="section"><div class="panel"><div class="board-head"><div><h2>레이드 관리</h2><div class="small">레이드별 최소/최대 레벨(미만)(최대 미만)과 인원수만 설정합니다.</div></div><button id="addRaidBtn" disabled>레이드 추가</button></div><div id="raidManageList"></div></div></section><section id="members" class="section"><div class="panel"><h2>길드원/캐릭터 현황</h2><div id="memberCharacterList" style="margin-top:12px"></div></div></section>
+<!-- FOOD START --><style id="food-style">#foodtab{--food-soft:var(--panel2);color:var(--text)}
+#foodtab *{box-sizing:border-box;min-width:0}
+#foodtab .food-hero{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px;padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+#foodtab h1{font-size:22px;margin:0 0 5px}#foodtab p{margin:4px 0;color:var(--muted);font-size:14px;line-height:1.6}
+#foodtab .food-hero-badge{text-align:center;padding:8px 16px;background:var(--panel2);border-radius:12px}#foodtab .food-hero-badge strong{display:block;color:var(--accent);font-size:24px}#foodtab .food-hero-badge span{font-size:12px;color:var(--muted)}
+#foodtab .food-quick-bar{margin-bottom:14px}#foodtab .food-layout{display:grid;grid-template-columns:minmax(280px,.7fr) minmax(0,1.3fr);gap:14px;align-items:start}
+#foodtab .food-panel,#foodtab .food-result-panel,#foodtab .food-manager-panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+#foodtab .food-right-column{position:sticky;top:125px}#foodtab .food-section{padding-bottom:16px;margin-bottom:16px;border-bottom:1px dashed var(--line)}#foodtab .food-section:last-of-type{border:0;margin:0}
+#foodtab h2{font-size:16px;margin:0 0 12px}#foodtab h2 small{font-size:12px;color:var(--muted);margin-left:8px}
+#foodtab .food-chips,#foodtab .food-tags,#foodtab .food-buttons,#foodtab .food-table-actions{display:flex;flex-wrap:wrap;gap:8px}#foodtab .food-chip{position:relative}#foodtab .food-chip input{position:absolute;opacity:0;width:1px;height:1px;padding:0}
+#foodtab .food-chip span{display:inline-flex;padding:8px 12px;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:999px;font-size:14px;cursor:pointer}#foodtab .food-chip input:checked+span{background:var(--accent);border-color:var(--accent);color:white}#foodtab .food-chip input:focus-visible+span{outline:2px solid var(--accent2);outline-offset:3px}
+#foodtab button{font:inherit;font-size:14px;font-weight:800;border-radius:12px;padding:9px 12px}#foodtab button:focus-visible,#foodtab summary:focus-visible{outline:2px solid var(--accent2);outline-offset:3px}#foodtab .food-secondary,#foodtab .food-quick-btn{background:var(--panel2);border:1px solid var(--line2);color:var(--text)}#foodtab .food-danger{background:var(--danger);color:white}#foodtab .food-primary{flex:1}
+#foodtab .food-buttons{margin-top:16px}#foodtab .food-recommend-card{padding:18px;border:1px solid var(--accent);background:var(--panel2);border-radius:14px;display:grid;gap:12px}#foodtab .food-menu-name{font-size:28px;font-weight:900;overflow-wrap:anywhere}#foodtab .food-score{font-size:14px;color:var(--accent2)}#foodtab .food-tag{font-size:12px;padding:5px 8px;background:var(--panel);border:1px solid var(--line);border-radius:99px}
+#foodtab .food-list-title{font-size:14px;font-weight:800;margin:18px 0 10px}#foodtab .food-menu-list{display:grid;gap:8px}#foodtab .food-mini-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}#foodtab .food-mini-card strong{display:block;overflow-wrap:anywhere;font-size:15px;margin-bottom:5px}#foodtab .food-mini-card small{color:var(--muted);font-size:12px;line-height:1.5}#foodtab .food-match-pill{padding:6px 8px;background:var(--panel);color:var(--accent2);border-radius:99px;font-size:12px;font-weight:800}
+#foodtab .food-empty,#foodtab .food-selected-summary{background:var(--panel2);border:1px solid var(--line);padding:14px;border-radius:12px;font-size:14px;line-height:1.6;color:var(--muted)}#foodtab .food-selected-summary{display:none;margin-bottom:12px}#foodtab .food-selected-summary.food-active{display:block}
+#foodtab .food-manager-panel{margin-top:14px;scroll-margin-top:130px}#foodtab .food-manager-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;list-style:none}#foodtab .food-manager-summary::-webkit-details-marker{display:none}#foodtab .food-manager-summary strong{display:block;font-size:16px;margin-bottom:4px}#foodtab .food-manager-summary span{font-size:13px;color:var(--muted)}#foodtab .food-manager-toggle{padding:8px 12px;background:var(--panel2);border-radius:99px;flex-shrink:0}#foodtab .food-manager-panel[open] .food-manager-toggle{font-size:0}#foodtab .food-manager-panel[open] .food-manager-toggle:before{content:'접기';font-size:13px}
+#foodtab .food-manager-content{padding-top:20px}#foodtab .food-manager-head,#foodtab .food-manager-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}#foodtab .food-search-box{flex:1}#foodtab .food-count-text{color:var(--muted);font-size:13px}
+#foodtab .food-form-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}#foodtab .food-field label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}#foodtab input[type=text],#foodtab select{width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font:inherit;font-size:14px}#foodtab input:focus-visible,#foodtab select:focus-visible{outline:2px solid var(--accent2)}
+#foodtab .food-notice{margin-top:14px;font-size:12px}#foodtab .food-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}#foodtab table{border-collapse:collapse;width:100%;min-width:1050px;font-size:13px}#foodtab th,#foodtab td{text-align:left;padding:10px;border-bottom:1px solid var(--line);white-space:nowrap}#foodtab th{background:var(--panel2);color:var(--muted)}#foodtab .food-table-actions{flex-wrap:nowrap}#foodtab .food-table-actions button{font-size:12px;padding:6px 8px}
+@media(max-width:900px){#foodtab .food-layout{grid-template-columns:1fr}#foodtab .food-right-column{position:static}#foodtab .food-form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:480px){#foodtab .food-hero{padding:12px}#foodtab .food-hero-badge{padding:6px 10px}#foodtab .food-panel,#foodtab .food-result-panel,#foodtab .food-manager-panel{padding:12px;border-radius:14px}#foodtab .food-manager-head{align-items:flex-start}#foodtab .food-manager-tools{display:grid;grid-template-columns:1fr}#foodtab .food-menu-name{font-size:24px}}
+</style><!-- FOOD END --></head><body><header><div class="wrap"><div class="top"><div class="title-tabs"><div><h1>로아 레이드 현황판</h1><div class="subtitle">Made by 진황</div></div><div class="tabs"><div class="tab active" data-tab="homework">숙제 관리</div><div class="tab" data-tab="raids">레이드 관리</div><div class="tab" data-tab="members">길드원/캐릭터</div><div class="tab" data-tab="gemcalc">보석 계산기</div><!-- FOOD START --><div class="tab" data-tab="foodtab">뭐먹지</div><!-- FOOD END --></div></div><div class="row"><input id="workspaceCode" placeholder="길드 이름"/><input id="nicknameInput" placeholder="호칭"/><button id="connectBtn">접속</button><button id="themeBtn" class="ghost">다크모드</button></div></div></div></header><main><div class="notice">매주 수요일 오전 6시 이후 자동 초기화</div><section id="homework" class="section active"><div class="layout"><aside class="panel side-sticky"><div class="board-head"><h2>내 원정대</h2><button id="addCharBtn" class="secondary" disabled>캐릭터 추가</button></div><div class="small" id="myInfo">접속 후 표시됩니다.</div><div id="myCharacterList" class="list" style="margin-top:10px"></div></aside><section class="panel"><div class="board-head"><div><h2>레이드 배치판</h2><div id="selectedRaidText" class="small">레이드를 선택하세요.</div></div><div class="row"><button id="undoPlacementBtn" class="ghost" disabled>되돌리기</button><button id="aiArrangeBtn" class="ai-arrange-btn" disabled>AI배치요청</button><button id="addPartyBtn" class="good" disabled>+ 파티 추가</button><button id="refreshAllBtn" class="secondary" disabled>갱신</button></div></div><div class="raid-category-box"><div id="raidSelector" class="raid-select-card"></div></div><div class="board-divider"></div><div id="raidBoard" class="board"></div></section><aside class="panel side-sticky"><h2>레이드 가능 길드원</h2><div id="eligibleInfo" class="small">레이드를 선택하면 표시됩니다.</div><div id="eligibleList" class="list" style="margin-top:10px"></div></aside></div></section><section id="raids" class="section"><div class="panel"><div class="board-head"><div><h2>레이드 관리</h2><div class="small">레이드별 최소/최대 레벨(미만)(최대 미만)과 인원수만 설정합니다.</div></div><button id="addRaidBtn" disabled>레이드 추가</button></div><div id="raidManageList"></div></div></section><section id="members" class="section"><div class="panel"><h2>길드원/캐릭터 현황</h2><div id="memberCharacterList" style="margin-top:12px"></div></div></section>
 <section id="gemcalc" class="section">
   <div class="panel gem-panel">
     <div class="gem-tools-grid">
@@ -329,7 +350,104 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
       </div>
     </div>
   </div>
-</section></main><div id="cubeAdderPopover" class="cube-adder-popover hidden" onclick="event.stopPropagation()"><b class="cube-adder-title" id="cubeAdderTitle">티켓</b><div class="cube-adder-summary" id="cubeAdderSummary"></div><input id="cubeAdderDisplay" class="cube-adder-display" value="0" readonly><div class="cube-keypad"><button type="button" onclick="cubeAdderPress(1)">1</button><button type="button" onclick="cubeAdderPress(2)">2</button><button type="button" onclick="cubeAdderPress(3)">3</button><button type="button" onclick="cubeAdderPress(4)">4</button><button type="button" onclick="cubeAdderPress(5)">5</button><button type="button" onclick="cubeAdderPress(6)">6</button><button type="button" onclick="cubeAdderPress(7)">7</button><button type="button" onclick="cubeAdderPress(8)">8</button><button type="button" onclick="cubeAdderPress(9)">9</button><button type="button" class="cube-key-back" onclick="cubeAdderClear()">지우기</button><button type="button" onclick="cubeAdderPress(0)">0</button><button type="button" class="cube-key-back" onclick="cubeAdderBackspace()">삭제</button></div><div class="cube-adder-actions"><button type="button" class="ghost" onclick="cubeCloseAdder()">취소</button><button type="button" class="good" onclick="cubeAdderConfirm()">더하기</button></div></div><div id="charModal" class="modal hidden"><div class="panel"><h2 id="charModalTitle">캐릭터 추가</h2><input id="editingCharId" type="hidden"/><div class="form"><div class="row"><input id="lookupName" placeholder="캐릭터명 입력 후 조회" style="flex:1"><button id="lookupBtn" class="secondary">조회</button></div><div id="lookupPreview" class="preview hidden"></div></div><div class="form two" style="margin-top:8px"><input id="charName" placeholder="캐릭터명"/><input id="charServer" placeholder="서버명"/><input id="charClass" placeholder="클래스명"/><input id="charLevel" type="number" placeholder="아이템 레벨"/><input id="charPower" type="number" placeholder="전투력"/><input id="charMemo" placeholder="메모"/>
+</section><!-- FOOD START --><section id="foodtab" class="section">
+    <section class="food-hero">
+      <div>
+        <h1>뭐먹지</h1>
+        <p>오늘 먹고 싶은 조건을 골라 메뉴를 추천받으세요.</p>
+      </div>
+      <div class="food-hero-badge">
+        <strong id="food-menuCount">0</strong>
+        <span>등록된 메뉴</span>
+      </div>
+    </section>
+
+    <div class="food-quick-bar">
+      <button class="food-quick-btn" data-food-click="randomPick()">아무거나 추천</button>
+    </div>
+
+    <div class="food-layout">
+      <aside class="food-right-column">
+        <section class="food-result-panel">
+          <h2>추천 결과</h2>
+          <div id="food-selectedSummary" class="food-selected-summary"></div>
+          <div id="food-mainResult" class="food-empty">원하는 조건을 선택한 뒤 메뉴 추천받기를 눌러주세요.</div>
+          <div class="food-list-title">후보 메뉴 6개</div>
+          <div id="food-candidateList" class="food-menu-list"></div>
+        </section>
+      </aside>
+
+      <section class="food-panel">
+        <div class="food-section"><h2>음식 스타일 <small>중복 선택 가능</small></h2><div class="food-chips" data-group="style" id="food-styleFilters"></div></div>
+        <div class="food-section"><h2>메인 형태</h2><div class="food-chips" data-group="type" id="food-typeFilters"></div></div>
+        <div class="food-section"><h2>국물 여부</h2><div class="food-chips" data-group="soup" id="food-soupFilters"></div></div>
+        <div class="food-section"><h2>온도</h2><div class="food-chips" data-group="temperature" id="food-temperatureFilters"></div></div>
+        <div class="food-section"><h2>맵기</h2><div class="food-chips" data-group="spicy" id="food-spicyFilters"></div></div>
+        <div class="food-section"><h2>포만감</h2><div class="food-chips" data-group="fullness" id="food-fullnessFilters"></div></div>
+        <div class="food-section"><h2>가격대</h2><div class="food-chips" data-group="price" id="food-priceFilters"></div></div>
+        <div class="food-section"><h2>기분/상태</h2><div class="food-chips" data-group="mood" id="food-moodFilters"></div></div>
+
+        <div class="food-buttons">
+          <button class="food-primary" data-food-click="recommendMenu()">메뉴 추천받기</button>
+          <button class="food-secondary" data-food-click="resetFilters()">조건 초기화</button>
+        </div>
+      </section>
+
+    </div>
+
+    <details class="food-manager-panel">
+      <summary class="food-manager-summary">
+        <div>
+          <strong>메뉴 관리</strong>
+          <span>등록된 메뉴의 이름과 카테고리를 추가, 수정, 삭제할 수 있습니다.</span>
+        </div>
+        <span class="food-manager-toggle">펼치기</span>
+      </summary>
+      <div class="food-manager-content">
+        <div class="food-manager-head">
+        <div>
+          <h2>메뉴 관리</h2>
+          <p>등록된 메뉴의 이름과 카테고리를 추가, 수정, 삭제할 수 있습니다.</p>
+        </div>
+        <button class="food-secondary" data-food-click="resetMenuData()">기본 메뉴로 복구</button>
+      </div>
+
+      <div class="food-manager-tools">
+        <input class="food-search-box" type="text" id="food-menuSearch" placeholder="메뉴명, 스타일, 카테고리 검색" data-food-input="renderMenuTable()">
+        <span class="food-count-text" id="food-tableCount"></span>
+      </div>
+
+      <div class="food-form-grid">
+        <div class="food-field"><label for="food-menuName">음식명</label><input type="text" id="food-menuName" placeholder="예: 김치찌개"></div>
+        <div class="food-field"><label for="food-menuStyle">음식 스타일</label><select id="food-menuStyle"></select></div>
+        <div class="food-field"><label for="food-menuType">메인 형태</label><select id="food-menuType"></select></div>
+        <div class="food-field"><label for="food-menuCook">조리 방식</label><select id="food-menuCook"></select></div>
+        <div class="food-field"><label for="food-menuSoup">국물 여부</label><select id="food-menuSoup"></select></div>
+        <div class="food-field"><label for="food-menuTemperature">온도</label><select id="food-menuTemperature"></select></div>
+        <div class="food-field"><label for="food-menuSpicy">맵기</label><select id="food-menuSpicy"></select></div>
+        <div class="food-field"><label for="food-menuFullness">포만감</label><select id="food-menuFullness"></select></div>
+        <div class="food-field"><label for="food-menuPrice">가격대</label><select id="food-menuPrice"></select></div>
+        <div class="food-field"><label for="food-menuMood">기분/상태</label><select id="food-menuMood"></select></div>
+      </div>
+
+      <div class="food-buttons">
+        <button class="food-primary" id="food-saveButton" data-food-click="saveMenu()">메뉴 추가</button>
+        <button class="food-secondary" data-food-click="clearForm()">입력 초기화</button>
+      </div>
+      <p class="food-notice">※ 현재 버전은 브라우저 localStorage에 저장됩니다. 같은 브라우저에서는 새로고침 후에도 수정 내용이 유지됩니다.</p>
+
+      <div class="food-table-wrap" style="margin-top:18px;">
+        <table>
+          <thead>
+            <tr>
+              <th>음식</th><th>음식 스타일</th><th>메인 형태</th><th>조리 방식</th><th>국물 여부</th><th>온도</th><th>맵기</th><th>포만감</th><th>가격대</th><th>기분/상태</th><th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="food-menuTableBody"></tbody>
+        </table>
+      </div>      </div>
+    </details>
+  </section><!-- FOOD END --></main><div id="cubeAdderPopover" class="cube-adder-popover hidden" onclick="event.stopPropagation()"><b class="cube-adder-title" id="cubeAdderTitle">티켓</b><div class="cube-adder-summary" id="cubeAdderSummary"></div><input id="cubeAdderDisplay" class="cube-adder-display" value="0" readonly><div class="cube-keypad"><button type="button" onclick="cubeAdderPress(1)">1</button><button type="button" onclick="cubeAdderPress(2)">2</button><button type="button" onclick="cubeAdderPress(3)">3</button><button type="button" onclick="cubeAdderPress(4)">4</button><button type="button" onclick="cubeAdderPress(5)">5</button><button type="button" onclick="cubeAdderPress(6)">6</button><button type="button" onclick="cubeAdderPress(7)">7</button><button type="button" onclick="cubeAdderPress(8)">8</button><button type="button" onclick="cubeAdderPress(9)">9</button><button type="button" class="cube-key-back" onclick="cubeAdderClear()">지우기</button><button type="button" onclick="cubeAdderPress(0)">0</button><button type="button" class="cube-key-back" onclick="cubeAdderBackspace()">삭제</button></div><div class="cube-adder-actions"><button type="button" class="ghost" onclick="cubeCloseAdder()">취소</button><button type="button" class="good" onclick="cubeAdderConfirm()">더하기</button></div></div><div id="charModal" class="modal hidden"><div class="panel"><h2 id="charModalTitle">캐릭터 추가</h2><input id="editingCharId" type="hidden"/><div class="form"><div class="row"><input id="lookupName" placeholder="캐릭터명 입력 후 조회" style="flex:1"><button id="lookupBtn" class="secondary">조회</button></div><div id="lookupPreview" class="preview hidden"></div></div><div class="form two" style="margin-top:8px"><input id="charName" placeholder="캐릭터명"/><input id="charServer" placeholder="서버명"/><input id="charClass" placeholder="클래스명"/><input id="charLevel" type="number" placeholder="아이템 레벨"/><input id="charPower" type="number" placeholder="전투력"/><input id="charMemo" placeholder="메모"/>
 <label class="force-dealer-row"><input id="forceDealer" type="checkbox"/> 서포터 클래스지만 딜러로 표시</label></div><div class="footer-actions"><button id="deleteCharBtn" class="danger hidden">삭제</button><button class="ghost" onclick="closeModal('charModal')">취소</button><button id="saveCharBtn">저장</button></div></div></div><div id="raidModal" class="modal hidden"><div class="panel"><h2 id="raidModalTitle">레이드 추가</h2><input id="editingRaidId" type="hidden"/><div class="form two"><input id="raidName" placeholder="레이드명"/><input id="raidShort" placeholder="짧은 이름"/><input id="raidMin" type="number" placeholder="최소 레벨"/><input id="raidMax" type="number" placeholder="최대 레벨(미만)"/><input id="raidPartySize" type="number" placeholder="인원수 4/8/16"/><input id="raidOrder" type="number" placeholder="정렬 순서"/>
 <select id="raidColor" class="raid-color-select">
   <option value="slate">기본 회색</option>
@@ -1295,5 +1413,378 @@ function cubeRemoveConfig(i){
 }
 
 init();
-</script></body></html>
+</script><!-- FOOD START --><script id="food-script">
+(() => {
+'use strict';
+const root=document.getElementById('foodtab');
+const getElement=id=>root.querySelector('#food-'+id);
+const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+    const defaultMenus = [
+      { name: '김치찌개', style: '한식', type: '밥류', cook: '국/탕/찌개', soup: '국물 많음', temperature: '뜨거움', spicy: '보통 매움', fullness: '적당히', price: '보통', mood: '해장용' },
+      { name: '된장찌개', style: '한식', type: '밥류', cook: '국/탕/찌개', soup: '국물 많음', temperature: '뜨거움', spicy: '안 매움', fullness: '적당히', price: '저렴', mood: '속 편한 음식' },
+      { name: '순두부찌개', style: '한식', type: '밥류', cook: '국/탕/찌개', soup: '국물 많음', temperature: '뜨거움', spicy: '보통 매움', fullness: '적당히', price: '보통', mood: '해장용' },
+      { name: '부대찌개', style: '한식', type: '밥류', cook: '전골', soup: '국물 많음', temperature: '뜨거움', spicy: '보통 매움', fullness: '든든하게', price: '보통', mood: '같이 먹기 좋음' },
+      { name: '제육볶음', style: '한식', type: '고기류', cook: '볶음', soup: '없음', temperature: '뜨거움', spicy: '보통 매움', fullness: '든든하게', price: '보통', mood: '스트레스 해소' },
+      { name: '삼겹살', style: '한식', type: '고기류', cook: '구이', soup: '없음', temperature: '뜨거움', spicy: '안 매움', fullness: '든든하게', price: '보통', mood: '같이 먹기 좋음' },
+      { name: '냉면', style: '한식', type: '면류', cook: '삶음', soup: '국물 많음', temperature: '차가움', spicy: '안 매움', fullness: '가볍게', price: '보통', mood: '속 편한 음식' },
+      { name: '비빔밥', style: '한식', type: '밥류', cook: '비빔', soup: '없음', temperature: '따뜻함', spicy: '약간 매움', fullness: '적당히', price: '보통', mood: '건강식' },
+      { name: '짜장면', style: '중식', type: '면류', cook: '볶음', soup: '없음', temperature: '뜨거움', spicy: '안 매움', fullness: '적당히', price: '저렴', mood: '혼밥' },
+      { name: '짬뽕', style: '중식', type: '면류', cook: '국물요리', soup: '국물 많음', temperature: '뜨거움', spicy: '보통 매움', fullness: '든든하게', price: '보통', mood: '해장용' },
+      { name: '탕수육', style: '중식', type: '고기류', cook: '튀김', soup: '없음', temperature: '뜨거움', spicy: '안 매움', fullness: '적당히', price: '보통', mood: '같이 먹기 좋음' },
+      { name: '마라탕', style: '중식', type: '국물류', cook: '국물요리', soup: '국물 많음', temperature: '뜨거움', spicy: '매우 매움', fullness: '든든하게', price: '보통', mood: '스트레스 해소' },
+      { name: '초밥', style: '일식', type: '밥류', cook: '생식', soup: '없음', temperature: '차가움', spicy: '안 매움', fullness: '적당히', price: '보통', mood: '건강식' },
+      { name: '라멘', style: '일식', type: '면류', cook: '국물요리', soup: '국물 많음', temperature: '뜨거움', spicy: '보통 매움', fullness: '든든하게', price: '보통', mood: '혼밥' },
+      { name: '우동', style: '일식', type: '면류', cook: '국물요리', soup: '국물 많음', temperature: '뜨거움', spicy: '안 매움', fullness: '적당히', price: '저렴', mood: '속 편한 음식' },
+      { name: '돈카츠', style: '일식', type: '고기류', cook: '튀김', soup: '없음', temperature: '뜨거움', spicy: '안 매움', fullness: '든든하게', price: '보통', mood: '혼밥' },
+      { name: '파스타', style: '양식', type: '면류', cook: '볶음/오븐', soup: '약간 있음', temperature: '뜨거움', spicy: '안 매움', fullness: '적당히', price: '보통', mood: '같이 먹기 좋음' },
+      { name: '피자', style: '양식', type: '빵류', cook: '오븐', soup: '없음', temperature: '뜨거움', spicy: '안 매움', fullness: '든든하게', price: '보통', mood: '같이 먹기 좋음' },
+      { name: '햄버거', style: '양식', type: '빵류', cook: '구이', soup: '없음', temperature: '뜨거움', spicy: '안 매움', fullness: '적당히', price: '저렴', mood: '혼밥' },
+      { name: '샌드위치', style: '양식', type: '빵류', cook: '조립형', soup: '없음', temperature: '차가움', spicy: '안 매움', fullness: '가볍게', price: '저렴', mood: '건강식' },
+      { name: '쌀국수', style: '동남아식', type: '면류', cook: '국물요리', soup: '국물 많음', temperature: '뜨거움', spicy: '안 매움', fullness: '가볍게', price: '보통', mood: '속 편한 음식' },
+      { name: '팟타이', style: '동남아식', type: '면류', cook: '볶음', soup: '없음', temperature: '뜨거움', spicy: '약간 매움', fullness: '적당히', price: '보통', mood: '혼밥' },
+      { name: '떡볶이', style: '분식', type: '국물류', cook: '볶음/조림', soup: '약간 있음', temperature: '뜨거움', spicy: '보통 매움', fullness: '적당히', price: '저렴', mood: '스트레스 해소' },
+      { name: '김밥', style: '분식', type: '밥류', cook: '조립형', soup: '없음', temperature: '차가움', spicy: '안 매움', fullness: '가볍게', price: '저렴', mood: '혼밥' },
+      { name: '치킨', style: '패스트푸드', type: '고기류', cook: '튀김', soup: '없음', temperature: '뜨거움', spicy: '보통 매움', fullness: '든든하게', price: '보통', mood: '야식' },
+      { name: '포케', style: '양식', type: '샐러드류', cook: '생식', soup: '없음', temperature: '차가움', spicy: '안 매움', fullness: '가볍게', price: '보통', mood: '건강식' },
+      { name: '샐러드', style: '양식', type: '샐러드류', cook: '생식', soup: '없음', temperature: '차가움', spicy: '안 매움', fullness: '가볍게', price: '보통', mood: '건강식' },
+      { name: '뼈해장국', style: '한식', type: '국물류', cook: '탕', soup: '국물 많음', temperature: '뜨거움', spicy: '보통 매움', fullness: '든든하게', price: '보통', mood: '해장용' },
+      { name: '샤브샤브', style: '한식', type: '고기류', cook: '전골', soup: '국물 많음', temperature: '뜨거움', spicy: '안 매움', fullness: '든든하게', price: '보통', mood: '같이 먹기 좋음' },
+      { name: '월남쌈', style: '동남아식', type: '샐러드류', cook: '생식/말이', soup: '없음', temperature: '차가움', spicy: '안 매움', fullness: '가볍게', price: '보통', mood: '건강식' }
+    ];
+
+    const options = {
+      style: ['한식', '중식', '일식', '양식', '동남아식', '분식', '패스트푸드', '멕시칸', '디저트'],
+      type: ['밥류', '면류', '고기류', '해산물류', '빵류', '샐러드류', '국물류', '떡류', '밀가루류', '도시락류'],
+      cook: ['국/탕/찌개', '국물요리', '구이', '볶음', '튀김', '찜', '조림', '전골', '삶음', '비빔', '생식', '조립형', '오븐', '굽기', '생식/말이'],
+      soup: ['국물 많음', '약간 있음', '없음'],
+      temperature: ['뜨거움', '따뜻함', '차가움'],
+      spicy: ['안 매움', '약간 매움', '보통 매움', '매우 매움'],
+      fullness: ['가볍게', '적당히', '든든하게'],
+      price: ['저렴', '보통', '비싼 편'],
+      mood: ['해장용', '속 편한 음식', '스트레스 해소', '건강식', '야식', '같이 먹기 좋음', '혼밥', '술안주', '몸보신', '특별한 날']
+    };
+
+    let menus = loadMenus();
+    let editingIndex = null;
+
+    function loadMenus() {
+      try { const saved = localStorage.getItem('menuRecommenderData'); const data = saved ? JSON.parse(saved) : defaultMenus; if (!Array.isArray(data) || !data.every(m => m && typeof m.name === 'string')) throw new Error(); return data.map(m => ({...m})); } catch { return defaultMenus.map(m => ({...m})); }
+    }
+
+    function saveMenusToStorage() {
+      try { localStorage.setItem('menuRecommenderData', JSON.stringify(menus)); } catch { alert('브라우저에 저장하지 못했습니다. 저장 공간과 브라우저 설정을 확인해주세요.'); }
+      updateCounts();
+    }
+
+    function updateCounts() {
+      getElement('menuCount').textContent = menus.length;
+    }
+
+    function renderFilterChips() {
+      const filterMap = {
+        styleFilters: ['style', options.style],
+        typeFilters: ['type', options.type],
+        soupFilters: ['soup', options.soup],
+        temperatureFilters: ['temperature', options.temperature],
+        spicyFilters: ['spicy', options.spicy],
+        fullnessFilters: ['fullness', options.fullness],
+        priceFilters: ['price', options.price],
+        moodFilters: ['mood', options.mood]
+      };
+
+      Object.entries(filterMap).forEach(([id, [key, values]]) => {
+        getElement(id).innerHTML = values.map(value => `
+          <label class="food-chip"><input type="checkbox" value="${value}" data-food-change="updateSelectedSummary()"><span>${value}</span></label>
+        `).join('');
+        getElement(id).dataset.group = key;
+      });
+    }
+
+    function renderSelectOptions() {
+      const selectMap = {
+        menuStyle: options.style,
+        menuType: options.type,
+        menuCook: options.cook,
+        menuSoup: options.soup,
+        menuTemperature: options.temperature,
+        menuSpicy: options.spicy,
+        menuFullness: options.fullness,
+        menuPrice: options.price,
+        menuMood: options.mood
+      };
+
+      Object.entries(selectMap).forEach(([id, values]) => {
+        getElement(id).innerHTML = values.map(value => `<option value="${value}">${value}</option>`).join('');
+      });
+    }
+
+    function renderMenuTable() {
+      const keyword = getElement('menuSearch')?.value.trim().toLowerCase() || '';
+      const tbody = getElement('menuTableBody');
+      const filtered = menus
+        .map((menu, index) => ({ ...menu, index }))
+        .filter(menu => !keyword || Object.values(menu).join(' ').toLowerCase().includes(keyword));
+
+      getElement('tableCount').textContent = `표시 ${filtered.length}개 / 전체 ${menus.length}개`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11">검색 결과가 없습니다.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(menu => `
+        <tr>
+          <td><strong>${escapeHtml(menu.name)}</strong></td>
+          <td>${escapeHtml(menu.style)}</td>
+          <td>${escapeHtml(menu.type)}</td>
+          <td>${escapeHtml(menu.cook)}</td>
+          <td>${escapeHtml(menu.soup)}</td>
+          <td>${escapeHtml(menu.temperature)}</td>
+          <td>${escapeHtml(menu.spicy)}</td>
+          <td>${escapeHtml(menu.fullness)}</td>
+          <td>${escapeHtml(menu.price)}</td>
+          <td>${escapeHtml(menu.mood)}</td>
+          <td>
+            <div class="food-table-actions">
+              <button class="food-secondary" data-food-click="editMenu(${menu.index})">수정</button>
+              <button class="food-danger" data-food-click="deleteMenu(${menu.index})">삭제</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function getSelectedFilters() {
+      const filters = {};
+      root.querySelectorAll('.food-chips').forEach(group => {
+        const key = group.dataset.group;
+        const selected = [...group.querySelectorAll('input:checked')].map(input => input.value);
+        filters[key] = selected;
+      });
+      return filters;
+    }
+
+    function updateSelectedSummary() {
+      const filters = getSelectedFilters();
+      const selected = Object.entries(filters).flatMap(([_, values]) => values);
+      const box = getElement('selectedSummary');
+      if (selected.length === 0) {
+        box.className = 'food-selected-summary';
+        box.textContent = '';
+        return;
+      }
+      box.className = 'food-selected-summary food-active';
+      box.innerHTML = `<strong>선택한 조건</strong><br>${selected.map(v => `#${v}`).join(' ')}`;
+    }
+
+    function calculateScore(menu, filters) {
+      let score = 0;
+      const fields = ['style', 'type', 'soup', 'temperature', 'spicy', 'fullness', 'price', 'mood'];
+      fields.forEach(field => {
+        if (filters[field] && filters[field].includes(menu[field])) score += 1;
+      });
+      return score;
+    }
+
+    function recommendMenu() {
+      const filters = getSelectedFilters();
+      const hasAnyFilter = Object.values(filters).some(values => values.length > 0);
+      const mainResult = getElement('mainResult');
+      const candidateList = getElement('candidateList');
+
+      if (!hasAnyFilter) {
+        mainResult.className = 'food-empty';
+        mainResult.textContent = '조건을 하나 이상 선택해주세요. 또는 상단의 아무거나 추천을 눌러보세요.';
+        candidateList.innerHTML = '';
+        return;
+      }
+
+      const ranked = menus
+        .map(menu => ({ ...menu, score: calculateScore(menu, filters) }))
+        .filter(menu => menu.score > 0)
+        .sort((a, b) => b.score - a.score || Math.random() - 0.5);
+
+      if (ranked.length === 0) {
+        mainResult.className = 'food-empty';
+        mainResult.textContent = '조건에 맞는 메뉴가 없습니다. 조건을 조금 줄여보세요.';
+        candidateList.innerHTML = '';
+        return;
+      }
+
+      const topScore = ranked[0].score;
+      const topMenus = ranked.filter(menu => menu.score === topScore);
+      const pick = topMenus[Math.floor(Math.random() * topMenus.length)];
+      showResult(pick, ranked);
+    }
+
+    function showResult(pick, rankedList = []) {
+      const mainResult = getElement('mainResult');
+      const candidateList = getElement('candidateList');
+      mainResult.className = 'food-recommend-card';
+      mainResult.innerHTML = `
+        <div class="food-menu-name">${escapeHtml(pick.name)}</div>
+        <div class="food-score">${pick.score ? `선택한 조건과 ${pick.score}개 항목이 일치합니다.` : '랜덤으로 추천된 메뉴입니다.'}</div>
+        <div class="food-tags">
+          <span class="food-tag">${escapeHtml(pick.style)}</span>
+          <span class="food-tag">${escapeHtml(pick.type)}</span>
+          <span class="food-tag">${escapeHtml(pick.soup)}</span>
+          <span class="food-tag">${escapeHtml(pick.temperature)}</span>
+          <span class="food-tag">${escapeHtml(pick.spicy)}</span>
+          <span class="food-tag">${escapeHtml(pick.fullness)}</span>
+          <span class="food-tag">${escapeHtml(pick.price)}</span>
+          <span class="food-tag">${escapeHtml(pick.mood)}</span>
+        </div>
+      `;
+
+      const list = rankedList.length ? rankedList : shuffleArray([...menus]).slice(0, 6).map(menu => ({...menu, score: 0}));
+      candidateList.innerHTML = list.slice(0, 6).map(menu => `
+        <div class="food-mini-card">
+          <div>
+            <strong>${escapeHtml(menu.name)}</strong>
+            <small>${escapeHtml(menu.style)} · ${escapeHtml(menu.type)} · ${escapeHtml(menu.spicy)} · ${escapeHtml(menu.fullness)} · ${escapeHtml(menu.price)}</small>
+          </div>
+          <span class="food-match-pill">${menu.score ? menu.score + '개 일치' : '랜덤'}</span>
+        </div>
+      `).join('');
+    }
+
+    function resetFilters() {
+      root.querySelectorAll('input[type="checkbox"]').forEach(input => input.checked = false);
+      updateSelectedSummary();
+      getElement('mainResult').className = 'food-empty';
+      getElement('mainResult').textContent = '원하는 조건을 선택한 뒤 메뉴 추천받기를 눌러주세요.';
+      getElement('candidateList').innerHTML = '';
+    }
+
+    function setChecked(groupKey, values) {
+      root.querySelectorAll(`.food-chips[data-group="${groupKey}"] input`).forEach(input => {
+        input.checked = values.includes(input.value);
+      });
+    }
+
+    function applyPreset(type) {
+      resetFilters();
+      const presets = {
+        light: { fullness: ['가볍게'], price: ['저렴', '보통'] },
+        spicy: { spicy: ['보통 매움', '매우 매움'], mood: ['스트레스 해소'] },
+        soup: { soup: ['국물 많음'], temperature: ['뜨거움'] },
+        solo: { mood: ['혼밥'], price: ['저렴', '보통'] },
+        healthy: { mood: ['건강식'], fullness: ['가볍게'] }
+      };
+      Object.entries(presets[type] || {}).forEach(([key, values]) => setChecked(key, values));
+      updateSelectedSummary();
+      recommendMenu();
+    }
+
+    function randomPick() {
+      resetFilters();
+      if (menus.length === 0) { getElement('mainResult').textContent = '등록된 메뉴가 없습니다. 메뉴를 추가하거나 기본 메뉴를 복구해주세요.'; return; }
+      const pick = menus[Math.floor(Math.random() * menus.length)];
+      showResult(pick, shuffleArray([...menus]).slice(0, 6));
+    }
+
+    function shuffleArray(array) {
+      return array.sort(() => Math.random() - 0.5);
+    }
+
+    function getFormData() {
+      return {
+        name: getElement('menuName').value.trim(),
+        style: getElement('menuStyle').value,
+        type: getElement('menuType').value,
+        cook: getElement('menuCook').value,
+        soup: getElement('menuSoup').value,
+        temperature: getElement('menuTemperature').value,
+        spicy: getElement('menuSpicy').value,
+        fullness: getElement('menuFullness').value,
+        price: getElement('menuPrice').value,
+        mood: getElement('menuMood').value
+      };
+    }
+
+    function saveMenu() {
+      const menu = getFormData();
+      if (!menu.name) {
+        alert('음식명을 입력해주세요.');
+        return;
+      }
+
+      const duplicateIndex = menus.findIndex((item, index) => item.name === menu.name && index !== editingIndex);
+      if (duplicateIndex >= 0 && !confirm('같은 이름의 메뉴가 이미 있습니다. 그래도 저장할까요?')) return;
+
+      if (editingIndex === null) {
+        menus.push(menu);
+      } else {
+        menus[editingIndex] = menu;
+      }
+
+      saveMenusToStorage();
+      renderMenuTable();
+      clearForm();
+    }
+
+    function editMenu(index) {
+      const menu = menus[index];
+      editingIndex = index;
+      getElement('menuName').value = menu.name;
+      getElement('menuStyle').value = menu.style;
+      getElement('menuType').value = menu.type;
+      getElement('menuCook').value = menu.cook;
+      getElement('menuSoup').value = menu.soup;
+      getElement('menuTemperature').value = menu.temperature;
+      getElement('menuSpicy').value = menu.spicy;
+      getElement('menuFullness').value = menu.fullness;
+      getElement('menuPrice').value = menu.price;
+      getElement('menuMood').value = menu.mood;
+      getElement('saveButton').textContent = '수정 내용 저장';
+      root.querySelector('.food-manager-panel').scrollIntoView({block:'start', behavior:'smooth'});
+    }
+
+    function deleteMenu(index) {
+      if (!confirm(`'${menus[index].name}' 메뉴를 삭제할까요?`)) return;
+      menus.splice(index, 1);
+      saveMenusToStorage();
+      renderMenuTable();
+      clearForm();
+      resetFilters();
+    }
+
+    function clearForm() {
+      editingIndex = null;
+      getElement('menuName').value = '';
+      getElement('menuStyle').selectedIndex = 0;
+      getElement('menuType').selectedIndex = 0;
+      getElement('menuCook').selectedIndex = 0;
+      getElement('menuSoup').selectedIndex = 0;
+      getElement('menuTemperature').selectedIndex = 0;
+      getElement('menuSpicy').selectedIndex = 0;
+      getElement('menuFullness').selectedIndex = 0;
+      getElement('menuPrice').selectedIndex = 0;
+      getElement('menuMood').selectedIndex = 0;
+      getElement('saveButton').textContent = '메뉴 추가';
+    }
+
+    function resetMenuData() {
+      if (!confirm('수정/추가한 메뉴를 모두 초기화하고 기본 메뉴로 복구할까요?')) return;
+      menus = [...defaultMenus];
+      saveMenusToStorage();
+      renderMenuTable();
+      clearForm();
+      resetFilters();
+    }
+
+    renderFilterChips();
+    renderSelectOptions();
+    renderMenuTable();
+    updateCounts();
+  
+const actions={randomPick,recommendMenu,resetFilters,resetMenuData,renderMenuTable,saveMenu,clearForm,updateSelectedSummary,editMenu,deleteMenu};
+for(const type of ['click','change','input']) root.addEventListener(type,event=>{
+ const el=event.target.closest('[data-food-'+type+']'); if(!el||!root.contains(el))return;
+ const match=el.getAttribute('data-food-'+type).match(/^(\w+)\((.*?)\)$/); if(!match||!actions[match[1]])return;
+ const arg=match[2]; actions[match[1]](...(arg ? [/^\d+$/.test(arg)?Number(arg):arg.replace(/^['"]|['"]$/g,'')] : []));
+});
+})();
+</script><!-- FOOD END --></body></html>
 
