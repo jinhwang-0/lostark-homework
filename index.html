@@ -302,6 +302,15 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
 @media(max-width:620px){.auction-layout{grid-template-columns:65px minmax(0,1fr);gap:12px}.auction-keypad{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr))}.auction-keypad button{min-height:42px}.auction-box{padding:12px}.auction-result output{font-size:16px}}
 
 .auction-box{position:relative}.auction-result .auction-copy{background:transparent;border:0;border-radius:6px;color:var(--text);padding:2px 4px;font-size:17px;font-weight:900;text-align:right;white-space:normal;overflow-wrap:anywhere}.auction-recommend .auction-copy{color:var(--accent2)}.auction-copy:hover:not(:disabled){background:var(--panel);text-decoration:underline}.auction-copy:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}.auction-copy:disabled{opacity:1;cursor:default}.auction-copy-status:not(:empty){position:absolute;right:12px;bottom:6px;padding:4px 8px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;font-size:12px;box-shadow:var(--shadow)}
+
+/* Auction layout: price and results left; participants above keypad right. */
+.auction-layout{grid-template-columns:minmax(170px,1fr) minmax(230px,1fr);grid-template-rows:auto auto;gap:12px 22px;align-items:start}
+.auction-layout fieldset{grid-column:2;grid-row:1;display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0}
+.auction-layout legend{float:left;padding:0;margin:0 4px 0 0;font-size:13px;line-height:22px}
+.auction-layout fieldset label{display:flex;gap:4px;margin:0;white-space:nowrap;font-size:13px;line-height:22px}
+.auction-values{grid-column:1;grid-row:2}.auction-keypad{grid-column:2;grid-row:2;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(55px,1.2fr);gap:6px}
+.auction-values>label{margin-bottom:10px}.auction-keypad button{min-height:36px}.auction-result{margin-top:12px}
+@media(max-width:620px){.auction-layout{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:10px 12px}.auction-layout fieldset{grid-column:1/-1;justify-content:flex-end;gap:14px}.auction-layout legend{margin-right:0}.auction-keypad{grid-column:2;grid-row:2;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}.auction-keypad button{min-height:38px;padding:6px 1px;font-size:13px}.auction-keypad button[data-auction-key=CLEAR]{font-size:9px}.auction-values{grid-column:1;grid-row:2}.auction-price-wrap input{font-size:15px;padding-left:8px}.auction-result{display:block;margin-top:10px;font-size:12px}.auction-result .auction-copy{display:block;margin-top:3px;width:100%;font-size:15px;padding:0;text-align:left}}
 </style><script id="auction-script">window.LoaAuction = (() => {
   let price = '', people = 4;
   function mount(board) {
@@ -317,7 +326,7 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
       const value = price === '' ? null : BigInt(price) * 95n * BigInt(people-1);
       box.querySelectorAll('.auction-copy').forEach(button=>button.disabled=value===null);
       box.querySelector('#auction-break').textContent = value===null?'—':(value/(100n*BigInt(people))).toLocaleString('ko-KR')+' G';
-      box.querySelector('#auction-bid').textContent = value===null?'—':(value/(110n*BigInt(people))).toLocaleString('ko-KR')+' G';
+      box.querySelector('#auction-bid').textContent = value===null?'—':((value/(100n*BigInt(people)))*91n/100n).toLocaleString('ko-KR')+' G';
     }
     input.addEventListener('input',()=>{price=clean(input.value);input.value=price;update();});
     box.addEventListener('change',e=>{if(e.target.name==='auction-people'){people=Number(e.target.value);update();}});
