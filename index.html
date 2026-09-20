@@ -300,19 +300,22 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
 .auction-result{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px;margin-top:10px}.auction-result output{font-size:17px;font-weight:900;text-align:right;overflow-wrap:anywhere}.auction-recommend output{color:var(--accent2)}
 .auction-keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(55px,1.2fr);gap:6px}.auction-keypad button{min-height:36px;padding:7px 4px;background:var(--panel);font-size:15px;border-radius:9px}.auction-keypad button[data-auction-key=CLEAR]{font-size:11px}.auction-keypad .auction-zero{grid-column:1}.auction-keypad button:hover{background:var(--accent);color:white}.auction-keypad button:focus-visible,.auction-box input:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}.auction-box>p{font-size:11px;color:var(--muted);margin:12px 0 0;line-height:1.5}
 @media(max-width:620px){.auction-layout{grid-template-columns:65px minmax(0,1fr);gap:12px}.auction-keypad{grid-column:1/-1;grid-template-columns:repeat(4,minmax(0,1fr))}.auction-keypad button{min-height:42px}.auction-box{padding:12px}.auction-result output{font-size:16px}}
+
+.auction-box{position:relative}.auction-result .auction-copy{background:transparent;border:0;border-radius:6px;color:var(--text);padding:2px 4px;font-size:17px;font-weight:900;text-align:right;white-space:normal;overflow-wrap:anywhere}.auction-recommend .auction-copy{color:var(--accent2)}.auction-copy:hover:not(:disabled){background:var(--panel);text-decoration:underline}.auction-copy:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}.auction-copy:disabled{opacity:1;cursor:default}.auction-copy-status:not(:empty){position:absolute;right:12px;bottom:6px;padding:4px 8px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;font-size:12px;box-shadow:var(--shadow)}
 </style><script id="auction-script">window.LoaAuction = (() => {
   let price = '', people = 4;
   function mount(board) {
     const box = document.createElement('section');
     box.className = 'auction-box';
     box.setAttribute('aria-label', '경매 손익 계산기');
-    box.innerHTML = `<h3>경매 손익 계산기</h3><div class="auction-layout"><fieldset><legend>인원수</legend>${[4,8,16].map(n=>`<label><input type="radio" name="auction-people" value="${n}" ${n===people?'checked':''}> ${n}인</label>`).join('')}</fieldset><div class="auction-values"><label for="auction-price">거래소 가격</label><div class="auction-price-wrap"><input id="auction-price" type="text" inputmode="numeric" autocomplete="off" placeholder="가격 입력" maxlength="16" aria-describedby="auction-note"><span>G</span></div><div class="auction-result"><span>손익 분기점</span><output id="auction-break">—</output></div><div class="auction-result auction-recommend"><span>입찰 추천가</span><output id="auction-bid">—</output></div></div><div class="auction-keypad" aria-label="거래소 가격 번호판">${['7','8','9','←','4','5','6','CLEAR','1','2','3','0','00','000'].map(k=>`<button type="button" class="ghost ${k==='0'?'auction-zero':''}" data-auction-key="${k}" aria-label="${k==='←'?'한 자리 지우기':k==='CLEAR'?'거래소 가격 지우기':k}">${k}</button>`).join('')}</div></div><p id="auction-note">거래소 수수료 5% · 다음 입찰가 10% 상승 기준 · 소수점 버림</p>`;
-    board.appendChild(box);
+    box.innerHTML = `<h3>경매 손익 계산기</h3><div class="auction-layout"><fieldset><legend>인원수</legend>${[4,8,16].map(n=>`<label><input type="radio" name="auction-people" value="${n}" ${n===people?'checked':''}> ${n}인</label>`).join('')}</fieldset><div class="auction-values"><label for="auction-price">거래소 가격</label><div class="auction-price-wrap"><input id="auction-price" type="text" inputmode="numeric" autocomplete="off" placeholder="가격 입력" maxlength="16"><span>G</span></div><div class="auction-result"><span>손익 분기점</span><button type="button" class="auction-copy" id="auction-break" title="손익 분기점 숫자 복사" aria-label="손익 분기점 숫자 복사" disabled>—</button></div><div class="auction-result auction-recommend"><span>입찰 추천가</span><button type="button" class="auction-copy" id="auction-bid" title="입찰 추천가 숫자 복사" aria-label="입찰 추천가 숫자 복사" disabled>—</button></div></div><div class="auction-keypad" aria-label="거래소 가격 번호판">${['7','8','9','←','4','5','6','CLEAR','1','2','3','0','00','000'].map(k=>`<button type="button" class="ghost ${k==='0'?'auction-zero':''}" data-auction-key="${k}" aria-label="${k==='←'?'한 자리 지우기':k==='CLEAR'?'거래소 가격 지우기':k}">${k}</button>`).join('')}</div></div><span class="auction-copy-status" role="status" aria-live="polite"></span>`;
+    board.prepend(box);
     const input = box.querySelector('#auction-price');
     input.value = price;
     const clean = value => value.replace(/[^0-9]/g,'').replace(/^0+(?=\d)/,'').slice(0,12);
     function update() {
       const value = price === '' ? null : BigInt(price) * 95n * BigInt(people-1);
+      box.querySelectorAll('.auction-copy').forEach(button=>button.disabled=value===null);
       box.querySelector('#auction-break').textContent = value===null?'—':(value/(100n*BigInt(people))).toLocaleString('ko-KR')+' G';
       box.querySelector('#auction-bid').textContent = value===null?'—':(value/(110n*BigInt(people))).toLocaleString('ko-KR')+' G';
     }
@@ -328,6 +331,19 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
       else {price=clean(price.slice(0,start)+key+price.slice(end));start=Math.min(start+key.length,price.length);}
       input.value=price;input.focus({preventScroll:true});input.setSelectionRange(start,start);update();
     });
+    let messageTimer;
+    box.querySelectorAll('.auction-copy').forEach(button=>button.addEventListener('click',async()=>{
+      const digits=button.textContent.replace(/[^0-9]/g,'');
+      if(!digits)return;
+      const status=box.querySelector('.auction-copy-status');
+      let copied=false;
+      try { await navigator.clipboard.writeText(digits); copied=true; } catch {
+        const text=document.createElement('textarea');text.value=digits;text.style.cssText='position:fixed;left:-9999px;top:0';document.body.appendChild(text);text.select();
+        try { copied=document.execCommand('copy'); } catch {} finally { text.remove();button.focus({preventScroll:true}); }
+      }
+      clearTimeout(messageTimer);status.textContent=copied?'숫자가 복사되었습니다.':'복사하지 못했습니다. 다시 시도해주세요.';
+      messageTimer=setTimeout(()=>{status.textContent='';},2000);
+    }));
     update();
   }
   return {mount};
