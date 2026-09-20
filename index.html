@@ -318,6 +318,27 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
 .auction-engravings{display:grid;gap:8px;container-type:inline-size}.auction-engraving-row{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.auction-engravings button{width:100%;min-height:40px;padding:9px 4px;font-size:13px;line-height:1.45;font-weight:800;text-align:center;white-space:nowrap;letter-spacing:-.025em}.auction-engravings button:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 .auction-engravings button{white-space:normal;overflow-wrap:anywhere;min-width:0}
 @media(max-width:760px){.auction-engravings{grid-template-columns:repeat(3,minmax(0,1fr))}.auction-engraving-row{display:contents}.auction-engravings button{min-height:44px;padding:10px 5px;font-size:13px}}
+
+/* Participant themes are scoped to the auction calculator. */
+.auction-box{--auction-rgb:244,114,151;--auction-accent:#cf3068;--auction-ink:#a94465;--auction-border:rgba(var(--auction-rgb),.30);isolation:isolate;background:linear-gradient(180deg,rgba(var(--auction-rgb),.20) 0%,rgba(var(--auction-rgb),.07) 36%,transparent 72%),var(--panel2);border-color:var(--auction-border);box-shadow:0 6px 22px rgba(var(--auction-rgb),.06)}
+.auction-box[data-people="8"]{--auction-rgb:81,183,238;--auction-accent:#067bb7;--auction-ink:#247b9d}
+.auction-box[data-people="16"]{--auction-rgb:156,207,86;--auction-accent:#548518;--auction-ink:#5d7e32}
+.auction-box::before{content:attr(data-watermark);position:absolute;z-index:-1;pointer-events:none;user-select:none;top:20px;left:28%;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:clamp(100px,12vw,190px);font-weight:950;letter-spacing:-.075em;line-height:1;color:rgba(var(--auction-rgb),.17);white-space:nowrap}
+.auction-box .auction-layout fieldset label{color:var(--auction-ink)}
+.auction-box .auction-layout fieldset label:has(input:checked){color:var(--auction-accent);font-weight:900}
+.auction-box input[type=radio]{accent-color:var(--auction-accent)}
+.auction-box .auction-price-wrap input,.auction-box .auction-keypad button,.auction-box .auction-engravings button{border-color:var(--auction-border);box-shadow:0 2px 5px rgba(var(--auction-rgb),.045)}
+.auction-box .auction-keypad button:hover{background:var(--auction-accent);color:white}
+.auction-box .auction-engravings{border-top-color:var(--auction-border)}
+.auction-box .auction-engravings button:hover,.auction-box .auction-engravings button.auction-engraving-selected{border-color:var(--auction-accent);color:var(--auction-accent);background:linear-gradient(rgba(var(--auction-rgb),.09),rgba(var(--auction-rgb),.09)),var(--panel)}
+.auction-box .auction-recommend .auction-copy{color:var(--auction-accent)}
+.auction-box button:focus-visible,.auction-box input:focus-visible{outline-color:var(--auction-accent)}
+body.dark .auction-box{--auction-accent:#ff9bbb;--auction-ink:#edb8ca;--auction-border:rgba(var(--auction-rgb),.32);background:linear-gradient(180deg,rgba(var(--auction-rgb),.16),rgba(var(--auction-rgb),.045) 45%,transparent 78%),var(--panel2)}
+body.dark .auction-box[data-people="8"]{--auction-accent:#88d4ff;--auction-ink:#a6d7ee}
+body.dark .auction-box[data-people="16"]{--auction-accent:#bee883;--auction-ink:#d0e6af}
+body.dark .auction-box::before{color:rgba(var(--auction-rgb),.12)}
+body.dark .auction-box .auction-keypad button:hover{background:rgba(var(--auction-rgb),.24);color:var(--text)}
+@media(max-width:760px){.auction-box::before{top:32px;left:7%;font-size:clamp(86px,24vw,145px)}}
 </style><script id="auction-script">window.LoaAuction = (() => {
   let price = '', people = 4;
   const engravings=['아드레날린','돌격대장','원한','예리한둔기','결투의대가','기습의대가','타격의대가','저주받은인형','질량증가','슈퍼차지','각성','전문의'];
@@ -331,6 +352,8 @@ body.dark .gem-result{background:rgba(56,189,248,.08);border-color:rgba(56,189,2
     input.value = price;
     const clean = value => value.replace(/[^0-9]/g,'').replace(/^0+(?=\d)/,'').slice(0,12);
     function update() {
+      box.dataset.people=String(people);
+      box.dataset.watermark=people+'인';
       const value = price === '' ? null : BigInt(price) * 95n * BigInt(people-1);
       box.querySelectorAll('.auction-copy').forEach(button=>button.disabled=value===null);
       box.querySelector('#auction-break').textContent = value===null?'—':(value/(100n*BigInt(people))).toLocaleString('ko-KR')+' G';
